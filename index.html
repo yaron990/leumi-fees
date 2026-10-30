@@ -1,0 +1,956 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>עמלות בנק לאומי</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Hebrew:wght@400;500;700&family=Frank+Ruhl+Libre:wght@700&display=swap">
+<style>
+/* Layout: quick-reference sheet; filter bar on top, grouped rows below; merged cells show where segments pay the same */
+:root{
+  --bg:#f6f7f9; --paper:#ffffff; --ink:#18202b; --muted:#5d6878; --line:#dde2e9;
+  --accent:#1f4f8f; --same:#eef2f8; --diff:#fff3df; --diff-ink:#7a4a00; --sup:#0f6b4f; --calc:#6a3fa0;
+  --f-display:"Frank Ruhl Libre", "David", serif;
+  --f-body:"IBM Plex Sans Hebrew", "Arial Hebrew", "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11161d; --paper:#18202a; --ink:#e7ecf2; --muted:#9aa6b6; --line:#2b3542;
+  --accent:#8db6ee; --same:#1d2836; --diff:#3a2c12; --diff-ink:#f3c97a; --sup:#6fd3ad; --calc:#c9a8f2; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11161d; --paper:#18202a; --ink:#e7ecf2; --muted:#9aa6b6; --line:#2b3542;
+  --accent:#8db6ee; --same:#1d2836; --diff:#3a2c12; --diff-ink:#f3c97a; --sup:#6fd3ad; --calc:#c9a8f2; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.wrap{max-width:1040px;margin:0 auto;padding-block:24px 48px;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));
+  display:flex;flex-direction:column;gap:16px}
+h1{font-family:var(--f-display);font-size:1.9rem;line-height:1.15;margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:4px 0 0}
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.lbl{font-size:.8rem;color:var(--muted);letter-spacing:.02em;min-width:5.5em}
+.chip{font:inherit;font-size:.85rem;border:1px solid var(--line);background:var(--bg);color:var(--muted);padding:4px 11px;border-radius:999px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.chip.mini{border-style:dashed}
+input[type="search"]{font:inherit;font-size:.9rem;flex:1 1 220px;min-width:0;padding:6px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+label.ck{display:inline-flex;gap:6px;align-items:center;font-size:.9rem;cursor:pointer}
+.count{font-size:.85rem;color:var(--muted);margin-inline-start:auto}
+.bar{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between}
+.legend{display:flex;flex-wrap:wrap;gap:8px 14px;color:var(--muted);font-size:.85rem}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:14px;height:14px;border-radius:3px;border:1px solid var(--line)}
+.btns{display:flex;gap:8px}
+button.b{font:inherit;font-size:.9rem;border:1px solid var(--accent);background:var(--paper);color:var(--accent);padding:6px 14px;border-radius:6px;cursor:pointer}
+button.b[aria-pressed="true"]{background:var(--accent);color:var(--paper)}
+button:focus-visible,td.v:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tbl{overflow-x:auto;background:var(--paper);border:1px solid var(--line);border-radius:8px}
+#t{width:100%;min-width:680px;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{padding:8px 12px;text-align:right;vertical-align:top;border-bottom:1px solid var(--line)}
+thead th{position:sticky;top:0;background:var(--paper);font-size:.8rem;letter-spacing:.02em;color:var(--muted);font-weight:500;border-bottom:2px solid var(--ink);z-index:1}
+thead th:first-child{width:25%}
+tr.grp th{background:var(--bg);font-family:var(--f-display);font-size:1.05rem;color:var(--accent);padding-top:14px}
+tr.grp th small{font-family:var(--f-body);font-size:.8rem;color:var(--muted);font-weight:400;margin-inline-start:8px}
+tr.sg th{background:var(--paper);font-size:.85rem;color:var(--ink);font-weight:700;padding-block:10px 4px}
+tr.sg th small{font-weight:400;color:var(--muted);margin-inline-start:8px}
+tr.tier td.name{padding-inline-start:28px;font-weight:400}
+td.name{font-weight:500}
+td.name small{display:block;font-weight:400;color:var(--muted);font-size:.8rem}
+td.v.same{background:var(--same);text-align:center}
+td.v.diff{background:var(--diff);color:var(--diff-ink);font-weight:500}
+.p{display:inline-block;font-size:.7rem;font-weight:700;color:var(--sup);border:1px solid var(--sup);border-radius:4px;padding:0 4px;margin-inline-start:6px;vertical-align:1px}
+.c{color:var(--calc);font-weight:700}
+.v small{display:block;color:var(--muted);font-size:.8rem;font-weight:400}
+.empty{padding:24px;text-align:center;color:var(--muted)}
+.notes{display:flex;flex-direction:column;gap:10px}
+.note{color:var(--muted);font-size:.88rem;max-width:80ch;margin:0}
+.note b{color:var(--ink)}
+.note ul{margin:4px 0 0;padding-inline-start:20px}
+.note a{color:var(--accent)}
+
+
+h2{font-family:var(--f-display);font-size:1.15rem;margin:0;color:var(--accent)}
+.tabs{display:flex;gap:4px;border-bottom:2px solid var(--line);overflow-x:auto}
+.tabs button{font:inherit;font-size:.95rem;background:none;border:0;border-bottom:3px solid transparent;margin-bottom:-2px;padding:8px 14px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent);font-weight:700}
+.tabsec{display:flex;flex-direction:column;gap:16px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field>span{font-size:.8rem;color:var(--muted);letter-spacing:.02em}
+.inrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+input[type="text"],input[type="number"]{font:inherit;font-size:1.1rem;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font-variant-numeric:tabular-nums;min-width:0}
+#amt,#lAmt{flex:1 1 220px}
+#disc,#lUse{width:5.5em}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.big{font-size:1.9rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1}
+.big .per{font-size:.85rem;font-weight:400;color:var(--muted)}
+.alt{font-size:.9rem;color:var(--muted)}
+.steps{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px;font-size:.9rem;font-variant-numeric:tabular-nums}
+.steps li{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed var(--line);padding-bottom:3px}
+.steps li b{font-weight:500}
+.tag{display:inline-block;font-size:.75rem;padding:1px 8px;border-radius:999px;background:var(--diff);color:var(--diff-ink);font-weight:500;vertical-align:middle}
+.blk{display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:8px}
+.blk-h{font-size:.8rem;color:var(--muted);letter-spacing:.02em}
+.freq{display:inline-block;align-self:flex-start;font-size:.78rem;font-weight:500;padding:1px 9px;border-radius:999px;border:1px solid currentColor}
+.freq.once{color:var(--accent)}
+.freq.q{color:var(--sup)}
+.tot{display:flex;justify-content:space-between;border-top:2px solid var(--ink);padding-top:8px;font-variant-numeric:tabular-nums}
+table.ctab{width:100%;min-width:560px;border-collapse:collapse;font-variant-numeric:tabular-nums}
+table.ctab th,table.ctab td{padding:7px 10px;text-align:right;border-bottom:1px solid var(--line);vertical-align:top}
+table.ctab thead th{font-size:.78rem;color:var(--muted);font-weight:500;border-bottom:2px solid var(--ink);position:static}
+table.ctab thead tr:first-child th[colspan]{text-align:center}
+table.ctab td small{display:block;color:var(--muted);font-size:.8rem}
+table.ctab tbody th{font-weight:500}
+#tab-loan table.ctab td,#tab-lines #lRef td{white-space:nowrap}
+table.chan-x td.tot2{background:var(--diff);color:var(--diff-ink);font-weight:500}
+table.chan-x tr.sg th{background:var(--bg);font-family:var(--f-display);color:var(--accent);font-size:1rem}
+table.chan-x td.name{font-weight:500}
+table.chan-x td.name small{display:block;font-weight:400;color:var(--muted);font-size:.8rem}
+table.chan-x thead tr:first-child th[colspan="2"]{background:var(--same)}
+table.chan-x thead tr:first-child th[colspan="3"]{background:var(--diff)}
+
+.calc{gap:16px}
+.sl{display:flex;flex-direction:column;gap:6px}
+.sl-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.sl-top label{font-size:.85rem;color:var(--muted)}
+.sl output{font-size:1.4rem;font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink)}
+.sl-ends{display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted)}
+input[type="range"]{width:100%;accent-color:var(--accent);height:28px;margin:0;direction:rtl}
+tr.cur th,tr.cur td{outline:2px solid var(--accent);outline-offset:-2px}
+
+.ch{display:flex;gap:8px;align-items:baseline}
+.ch+.ch{margin-top:3px}
+.ch>i{font-style:normal;font-size:.72rem;font-weight:700;color:var(--muted);flex:0 0 2.8em;letter-spacing:.02em}
+td.v.same .ch{justify-content:center}
+td.v.diff .ch>i{color:var(--diff-ink);opacity:.75}
+.cn{display:inline-block;font-size:.72rem;font-weight:500;color:var(--calc);margin-inline-start:6px}
+
+.sl-top input.num{font-size:1.25rem;font-weight:700;width:9.5em;max-width:60%;text-align:left;direction:ltr;padding:6px 10px}
+.sl-top input.pc{width:5em}
+
+.steps li.th{color:var(--muted)}
+.steps li.th b{font-weight:400}
+table.thr td small{display:block;color:var(--muted);font-size:.8rem}
+td.v .ch.w>i{flex-basis:5.2em}
+small.mm{display:block;font-size:.76rem;color:var(--accent);font-weight:500;margin-top:2px}
+
+.find{position:sticky;top:env(safe-area-inset-top,0px);z-index:3;gap:8px;box-shadow:0 4px 12px -8px rgba(0,0,0,.25)}
+.find #q{font-size:1.1rem;padding:10px 12px;flex:none;width:100%}
+#cats.dim{opacity:.45}
+
+.seg-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.seg-grid .chip{border-radius:8px;padding:8px 6px;text-align:center}
+.seg .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--paper)}
+.fxres .big{font-size:2.2rem}
+
+#fxPre{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+#fxPre .chip{padding:5px 0;text-align:center;font-size:.8rem}
+.fxres{border:2px solid var(--accent)}
+#tab-fx .sl-top input.num{width:auto;flex:1;max-width:none}
+
+.calc{gap:14px}
+.flbl{font-size:.82rem;color:var(--muted);font-weight:500;letter-spacing:.02em}
+.amt{display:flex;flex-direction:column;gap:6px}
+.amt .sl-top .flbl{white-space:nowrap}
+.amt .sl-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.amt input.num{flex:0 1 11em;min-width:0;font-size:1.3rem;font-weight:700;text-align:left;direction:ltr;padding:6px 10px}
+.presets{display:flex;gap:6px;flex-wrap:wrap}
+.presets .chip{flex:1 1 0;min-width:3.6em;text-align:center;padding:5px 4px;font-size:.82rem}
+.opts{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);padding-top:12px}
+.opts [hidden]{display:none!important}
+.card .blk:first-of-type{border-top:0;padding-top:0}
+td.minb{background:var(--same)}
+td.maxb{background:var(--diff);color:var(--diff-ink)}
+@media (max-width:640px){
+  h1{font-size:1.5rem}
+  #feesTbl{overflow:visible;border:0;background:none}
+  #t{min-width:0}
+  #t thead{display:none}
+  #t,#t tbody{display:block}
+  #t tbody tr{display:block;background:var(--paper);border:1px solid var(--line);border-radius:8px;margin-bottom:8px;overflow:hidden}
+  #t tbody tr.grp,#t tbody tr.sg{background:none;border:0;border-radius:0;margin:0}
+  tr.grp th,tr.sg th{display:block;padding-inline:2px;border:0}
+  tr.grp th{padding-top:14px;background:none}
+  tr.sg th small{display:block;margin:0}
+  #t td{display:block;border-bottom:1px solid var(--line)}
+  #t td:last-child{border-bottom:0}
+  td.name{background:var(--bg);padding-block:8px}
+  tr.tier td.name{padding-inline-start:12px}
+  td.v{display:grid;grid-template-columns:6.5em 1fr;gap:8px;align-items:start}
+  td.v.same{text-align:right}
+  td.v::before{content:attr(data-l);font-size:.75rem;color:var(--muted);font-weight:500;padding-top:2px}
+  .panel .lbl{min-width:0;width:100%}
+  input[type="search"]{flex-basis:100%}
+  .count{margin-inline-start:0}
+  table.chan-x{min-width:0;display:block}
+  table.chan-x thead{display:none}
+  table.chan-x tbody{display:block}
+  table.chan-x tbody tr{display:block;background:var(--paper);border:1px solid var(--line);border-radius:8px;margin-bottom:8px;overflow:hidden}
+  table.chan-x tbody tr.sg{background:none;border:0;margin:0}
+  table.chan-x tr.sg th{display:block;background:none;border:0;padding:14px 2px 4px}
+  table.chan-x td{display:grid;grid-template-columns:9em 1fr;gap:8px;border-bottom:1px solid var(--line)}
+  table.chan-x td:last-child{border-bottom:0}
+  table.chan-x td.name{display:block;background:var(--bg)}
+  table.chan-x td::before{content:attr(data-l);font-size:.75rem;color:var(--muted);font-weight:500}
+  table.chan-x td.name::before{content:none}
+}
+@media (prefers-reduced-motion:no-preference){td.v .t{transition:filter .15s}}
+
+@media (max-width:640px){
+  .wrap{gap:12px;padding-block:12px 32px}
+  h1{font-size:1.3rem}
+  header .sub{font-size:.78rem;margin-top:2px}
+  .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;padding:3px;border:1px solid var(--line);border-radius:10px;background:var(--paper);overflow:visible}
+  .tabs button{border:0;margin:0;padding:7px 2px;border-radius:7px;font-size:.8rem;line-height:1.2;white-space:normal;text-align:center}
+  .tabs button[aria-selected="true"]{background:var(--accent);color:var(--paper);font-weight:700}
+  .find{padding:8px 10px;gap:6px;border-radius:0;margin-inline:calc(-1 * max(16px, env(safe-area-inset-left, 0px)));border-inline:0}
+  .find #q{font-size:1rem;padding:8px 10px}
+  #cats{flex-wrap:nowrap;overflow-x:auto;gap:6px;scrollbar-width:none;margin-inline:-10px;padding-inline:10px;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
+  #cats::-webkit-scrollbar{display:none}
+  #cats .chip{flex:0 0 auto;padding:3px 10px;font-size:.8rem;scroll-snap-align:start}
+  .find .row:last-child{font-size:.8rem;justify-content:space-between}
+  .find label.ck{font-size:.8rem}
+  .legend{font-size:.72rem;gap:4px 10px}
+  .bar{gap:6px}
+  #t td{padding:6px 10px}
+  #t td.v .ch{justify-content:flex-start}
+  #t td.v{display:grid;text-align:right;grid-template-columns:7.4em 1fr;column-gap:10px;align-items:baseline}
+  #t td.v::before{white-space:nowrap}
+  #t td.name{padding-block:7px 6px;font-size:.95rem}
+  #t tbody tr{margin-bottom:6px}
+  header .sub{display:none}
+  .notes .note,.tabsec>.note{font-size:.8rem}
+  .panel{padding:10px 12px}
+  .big{font-size:1.5rem}
+}
+</style>
+
+<div class="wrap" dir="rtl" lang="he">
+  <header>
+    <h1>עמלות לאומי: יחיד, עסק קטן, עסק גדול</h1>
+    <p class="sub">כל סעיפי התעריפונים הרשמיים המעודכנים ל-01/10/2026. ללא מע"מ, ללא הוצאות צד ג' (קורספונדנט, דואר, אגרות, בנק בחו"ל).</p>
+  </header>
+  <nav class="tabs" role="tablist" aria-label="אזורים">
+    <button type="button" role="tab" data-tab="fees" aria-selected="true">כל העמלות</button>
+    <button type="button" role="tab" data-tab="fx" aria-selected="false">מחשבון מט"ח</button>
+    <button type="button" role="tab" data-tab="loan" aria-selected="false">טיפול בהלוואה</button>
+    <button type="button" role="tab" data-tab="lines" aria-selected="false">מסגרת והקצאה</button>
+  </nav>
+  <section id="tab-fees" class="tabsec">
+
+  <div class="panel find" role="search">
+    <input type="search" id="q" placeholder="חפשו עמלה: ערבות, זה&quot;ב, שיק, חליפין…" aria-label="חיפוש עמלה" autocomplete="off">
+    <div class="row" id="cats"></div>
+    <div class="row">
+      <label class="ck"><input type="checkbox" id="diffOnly"> רק מה שעסק גדול משלם אחרת</label>
+      <span class="count" id="count"></span>
+    </div>
+  </div>
+
+  <div class="bar">
+    <p class="note chnote"><b>פקיד</b> = סניף או מוקד מאויש · <b>ישיר</b> = אינטרנט, אפליקציה, כספומט, עמדות. יחיד ועסק קטן: מחיר אחיד לכל פעולה (פקיד 5.50 ₪, ישיר 1.65 ₪). עסק גדול: מחיר נפרד לכל פעולה + 1.65 ₪ רישום פעולה.</p>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--same)"></i>תא ממוזג = אותו מחיר</span>
+      <span><i class="sw" style="background:var(--diff)"></i>עסק גדול שונה</span>
+      <span><b class="p">פ</b>בפיקוח בנק ישראל</span>
+      <span><b class="c">*</b>חושב מאחוז ההנחה שבתעריפון</span>
+    </div>
+  </div>
+
+  <div class="tbl" id="feesTbl"><table id="t">
+    <thead><tr><th>עמלה</th><th>יחיד</th><th>עסק קטן</th><th>עסק גדול</th></tr></thead>
+    <tbody></tbody>
+  </table><div class="empty" id="empty" hidden>אין עמלות שמתאימות לסינון. נקו את החיפוש או בחרו נושאים נוספים.</div></div>
+
+  <div class="notes">
+    <div class="note"><b>פטור מעמלת טיפול בחידוש הלוואה</b>
+      <ul>
+        <li><b>יחיד ועסק קטן:</b> אין לגבות את העמלה בחידוש אשראי שאינו כרוך בשינוי או בהוספת ביטחונות. בהגדלת האשראי נגבית העמלה על ההפרש בלבד. אותו כלל חל על בקשה להלוואה לדיור.</li>
+        <li><b>עסק גדול:</b> פטור בחידוש רק כשמתקיימים <u>כל</u> התנאים: (1) החידוש באותו סכום או בסכום נמוך יותר; (2) לא יאוחר מ-7 ימים ממועד פירעון ההלוואה המקורית; (3) נגבתה עמלה בהלוואה המקורית; (4) תקופת ההלוואה המקורית לא עלתה על 6 חודשים; (5) הפטור ניתן לתקופה של עד 12 חודשים מיום העמדת ההלוואה המקורית. בהגדלה בעת חידוש נגבית עמלה רק על סכום ההגדלה, לפי המדרגה של סכום ההגדלה.</li>
+        <li><b>מסגרת אשראי לעסק גדול:</b> בהגדלה שאינה משנה את תום התוקף המקורי, העמלה נגבית רק על סכום ההגדלה.</li>
+        <li><b>פטורים נוספים:</b> עסק גדול — הלוואות "אקספרס" ו"תשלומון" פטורות. יחיד ועסק קטן — "אשראי בקליק" / "הלוואת דיגיטל" בערוץ דיגיטלי פטורה; חשבון "לאומי טוטאל דיגיטל" פטור גם בחידוש; "לאומי סטודנט" מקבל 50% הנחה בחידוש.</li>
+      </ul>
+    </div>
+    <p class="note"><b>כיסוי אוטומטי במט"ח, לפי פעולה בפועל מ-11/10/26:</b> 33.16 אירו לפי שער יציג 3.4291 = 113.71 ₪. נוסף מרווח הפרשי שער 0.92% ועמלה 0.58%, יחד 1.5%, וסה"כ חויב 115.41 ₪ (= 113.71 × 1.015). כלומר 1.5% מעל השער היציג, כולל המרווח, וללא עמלת חליפין נוספת.</p>
+    <p class="note"><b>רפורמה מ-1/7/2027 (יחיד ועסק קטן):</b> פעולות פקיד וערוץ ישיר והמסלולים יוחלפו ב"ניהול חשבון תשלום" — עד 10 ₪ לחודש ל-100 פעולות (עד 5 ₪ בחשבון עם עד 2 פעולות), עד 1 ₪ לכל פעולה נוספת. "טיפול בשטרות" יבוטל.</p>
+    <p class="note"><b>סיווג:</b> עוסק מורשה = יחיד בכל מחזור. חברה = עסק קטן רק עם דוח שנתי של עד 5 מיליון ₪ מחזור, או בשנה הראשונה להתאגדות.</p>
+    <p class="note">מקורות: <a href="https://www.bankleumi.co.il/static-files/Commissions_Leumi/AmlotYechidimL.pdf">תעריפון יחידים ועסקים קטנים</a> · <a href="https://www.bankleumi.co.il/static-files/Commissions_Leumi/AmlotTaagidimL.pdf">תעריפון עסקים גדולים</a> · <a href="https://boi.org.il/media/ideblefl/159a1.pdf">כללי העמלות, תיקון 2024</a> · <a href="https://www.boi.org.il/media/m4whhvkl/202616.pdf">דוח קביעת אסדרה 21/06/2026</a></p>
+  </div>
+  </section>
+<section id="tab-fx" class="tabsec" hidden>
+  <section class="panel calc" aria-label="מחשבון עמלות מט&quot;ח">
+    <div class="field"><span class="flbl">סוג הפעולה</span>
+      <div class="seg seg-grid" id="fxOp">
+        <button class="chip" type="button" data-v="out">העברה לחו"ל</button>
+        <button class="chip" type="button" data-v="imp">יבוא – תשלום לספק</button>
+        <button class="chip" type="button" data-v="in">קבלה מחו"ל</button>
+        <button class="chip" type="button" data-v="exp">תמורת יצוא</button>
+      </div>
+    </div>
+    <div class="amt">
+      <div class="sl-top"><label class="flbl" for="fxAmtIn">סכום ($)</label><input type="text" id="fxAmtIn" class="num" inputmode="decimal" autocomplete="off"></div>
+      <input type="range" id="fxAmtR" aria-label="סכום – סליידר">
+      <div class="presets" id="fxAmtP"></div>
+    </div>
+    <div class="opts">
+      <div class="seg seg-grid two" id="fxCh">
+        <button class="chip" type="button" data-v="d">ערוץ ישיר</button>
+        <button class="chip" type="button" data-v="t">פקיד</button>
+      </div>
+      <label class="ck"><input type="checkbox" id="fxConv"> כולל המרה משקלים / לשקלים</label>
+    </div>
+  </section>
+  <div class="cards" id="fxCards" aria-live="polite"></div>
+  <div class="note"><b>שימו לב</b>
+    <ul>
+      <li><b>יבוא טובין</b> מחויב לפי "יבוא ישיר" ולא בעמלת העברה. יבוא <b>שירותים</b> ותשלום לסוכן – לפי "העברה לחו"ל".</li>
+      <li><b>תמורת יצוא</b> טובין או שירותים – לפי "יצוא ישיר". קבלה אחרת מחו"ל – לפי "קבלה מחו"ל".</li>
+      <li><b>לא כולל:</b> הוצאות קורספונדנט, הוצאות הבנק בחו"ל בהוראת OUR, ובעסק גדול 1.65 ₪ רישום פעולה. העברה נכנסת עם הערת OUR / PAY IN FULL פטורה.</li>
+      <li>מחירי ערוץ ישיר לעסק גדול מחושבים מאחוז ההנחה שבתעריפון (10% בהעברה וביבוא, 20% בהמרה).</li>
+    </ul>
+  </div>
+</section>
+<section id="tab-loan" class="tabsec" hidden>
+  <section class="panel calc" aria-label="מחשבון עמלת טיפול בהלוואה">
+    <div class="amt">
+      <div class="sl-top"><label class="flbl" for="lnAmtIn">הלוואה (₪)</label><input type="text" id="lnAmtIn" class="num" inputmode="numeric" autocomplete="off"></div>
+      <input type="range" id="lnAmtR" aria-label="סכום ההלוואה – סליידר">
+      <div class="presets" id="lnAmtP"></div>
+    </div>
+    <div class="amt">
+      <div class="sl-top"><label class="flbl" for="lnDiscIn">הטבה (%)</label><input type="text" id="lnDiscIn" class="num" inputmode="decimal" autocomplete="off"></div>
+      <input type="range" id="lnDiscR" aria-label="הטבה – סליידר">
+      <div class="presets" id="lnDiscP"></div>
+    </div>
+    <div class="opts">
+      <div class="seg seg-grid two" id="lnM">
+        <button class="chip" type="button" data-v="all">ההטבה גם על המינימום</button>
+        <button class="chip" type="button" data-v="rate">המינימום נשמר</button>
+      </div>
+    </div>
+  </section>
+  <div class="cards" id="lnCards" aria-live="polite"></div>
+  <section class="panel">
+    <h2>מתי העמלה נופלת במינימום ובמקסימום</h2>
+    <p class="note">לפי התעריף המלא. בסכום שבין שני הספים העמלה היא האחוז עצמו.</p>
+    <div class="tbl"><table class="ctab thr">
+      <thead><tr><th>סוג לקוח</th><th>מדרגת סכום</th><th>שיעור</th><th>נפל במינימום</th><th>נפל במקסימום</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">יחיד ועסק קטן</th><td>עד 100,000 ₪</td><td>אין עמלה</td><td>—</td><td>—</td></tr>
+        <tr><th scope="row">יחיד ועסק קטן</th><td>מעל 100,000 ₪</td><td>1.5% · מינ' 1,000 · מקס' 10,000 ₪</td><td>אף פעם<small>1.5% מ-100,000 ₪ הם כבר 1,500 ₪</small></td><td class="maxb">מ-666,666.67 ₪</td></tr>
+        <tr><th scope="row">עסק גדול</th><td>עד 7,500 ₪</td><td>50 ₪ קבוע</td><td>—</td><td>—</td></tr>
+        <tr><th scope="row">עסק גדול</th><td>7,500 – 100,000 ₪</td><td>1.6% · מינ' 300 ₪</td><td class="minb">עד 18,750 ₪</td><td>—</td></tr>
+        <tr><th scope="row">עסק גדול</th><td>100,000 – 650,000 ₪</td><td>1.5% · מינ' 1,600 ₪</td><td class="minb">עד 106,666.67 ₪</td><td>—</td></tr>
+        <tr><th scope="row">עסק גדול</th><td>650,000 ₪ – 1 מיליון</td><td>1.1% · מינ' 10,000 ₪</td><td class="minb">עד 909,090.91 ₪</td><td>—</td></tr>
+        <tr><th scope="row">עסק גדול</th><td>1 – 5 מיליון ₪</td><td>0.35% · מינ' 11,000 ₪</td><td class="minb">עד 3,142,857.14 ₪</td><td>—</td></tr>
+        <tr><th scope="row">עסק גדול</th><td>מעל 5 מיליון ₪</td><td>0.25% · מינ' 17,500 · מקס' 40,000 ₪</td><td class="minb">עד 7,000,000 ₪</td><td class="maxb">מ-16,000,000 ₪</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+  <section class="panel">
+    <h2>טבלת עזר</h2>
+    <p class="note">עמלה חד-פעמית, נגבית בביצוע. "אחרי הטבה" לפי ההטבה שנבחרה במחשבון.</p>
+    <div class="legend"><span><i class="sw" style="background:var(--same)"></i>נפל במינימום</span><span><i class="sw" style="background:var(--diff)"></i>נפל במקסימום</span></div>
+    <div class="tbl"><table class="ctab">
+      <thead>
+        <tr><th rowspan="2">סכום הלוואה</th><th colspan="2">יחיד ועסק קטן</th><th colspan="2">עסק גדול</th></tr>
+        <tr><th>תעריף מלא</th><th class="hd-disc">אחרי הטבה</th><th>תעריף מלא</th><th class="hd-disc">אחרי הטבה</th></tr>
+      </thead>
+      <tbody id="lnRef"></tbody>
+    </table></div>
+  </section>
+  <div class="note"><b>כללים</b>
+    <ul>
+      <li><b>יחיד ועסק קטן:</b> רק בהלוואה מעל 100,000 ₪ — 1.5%, מינימום 1,000 ₪, מקסימום 10,000 ₪.</li>
+      <li><b>עסק גדול, מדרגות:</b> עד 7,500 ₪ — 50 ₪ · עד 100 אלף — 1.6% (מינ' 300) · עד 650 אלף — 1.5% (מינ' 1,600) · עד 1 מ' — 1.1% (מינ' 10,000) · עד 5 מ' — 0.35% (מינ' 11,000) · מעל — 0.25% (מינ' 17,500, מקס' 40,000).</li>
+      <li><b>ההטבה והמינימום:</b> התעריפון לא קובע אם הטבה מקטינה גם את המינימום. בניכיון שיקים ליחיד ולעסק קטן ההטבה (87.5%) מוחלת על סכום המינימום עצמו.</li>
+      <li><b>חידוש עם הגדלה:</b> העמלה על סכום ההגדלה בלבד; בעסק גדול לפי המדרגה של ההגדלה. הזינו את סכום ההגדלה.</li>
+      <li><b>לא כולל:</b> פטורים בחידוש, "אשראי בקליק" דיגיטלי, "אקספרס"/"תשלומון" בעסק גדול, ערבות מדינה (150 ₪) והוצאות צד ג'.</li>
+    </ul>
+  </div>
+  <p class="note">מקורות: <a href="https://www.bankleumi.co.il/static-files/Commissions_Leumi/AmlotYechidimL.pdf">תעריפון יחידים ועסקים קטנים, סעיף 3(א)(2)</a> · <a href="https://www.bankleumi.co.il/static-files/Commissions_Leumi/AmlotTaagidimL.pdf">תעריפון עסקים גדולים, סעיפים 3.3.1.1–3.3.1.6</a></p>
+</section>
+<section id="tab-lines" class="tabsec" hidden>
+  <section class="panel calc" aria-label="מחשבון מסגרת והקצאת אשראי">
+    <div class="amt">
+      <div class="sl-top"><label class="flbl" for="liAmtIn">מסגרת (₪)</label><input type="text" id="liAmtIn" class="num" inputmode="numeric" autocomplete="off"></div>
+      <input type="range" id="liAmtR" aria-label="סכום המסגרת – סליידר">
+      <div class="presets" id="liAmtP"></div>
+    </div>
+    <div class="amt">
+      <div class="sl-top"><label class="flbl" for="liDiscIn">הטבה (%)</label><input type="text" id="liDiscIn" class="num" inputmode="decimal" autocomplete="off"></div>
+      <input type="range" id="liDiscR" aria-label="הטבה – סליידר">
+      <div class="presets" id="liDiscP"></div>
+    </div>
+    <div class="opts">
+      <div class="seg seg-grid two" id="liM">
+        <button class="chip" type="button" data-v="all">ההטבה גם על המינימום</button>
+        <button class="chip" type="button" data-v="rate">המינימום נשמר</button>
+      </div>
+      <label class="ck"><input type="checkbox" id="liUnused"> יחיד: המסגרת לא נוצלה ברבעון</label>
+    </div>
+  </section>
+  <div class="cards" id="liCards" aria-live="polite"></div>
+  <section class="panel">
+    <h2>מתי העמלה נופלת במינימום ובמקסימום</h2>
+    <div class="tbl"><table class="ctab thr">
+      <thead><tr><th>עמלה</th><th>חלה על</th><th>שיעור</th><th>נפל במינימום</th><th>נפל במקסימום</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">טיפול במסגרת</th><td>עסק קטן ועסק גדול</td><td>1.25% · מינ' 500 · מקס' 10,000 ₪</td><td class="minb">עד 40,000 ₪</td><td class="maxb">מ-800,000 ₪</td></tr>
+        <tr><th scope="row">הקצאת אשראי</th><td>עסק קטן / עסק גדול</td><td>0.45% / 0.565% לרבעון</td><td>אין מינימום</td><td>אין מקסימום</td></tr>
+        <tr><th scope="row">הקצאת אשראי</th><td>יחיד</td><td>12 ₪ קבוע לרבעון</td><td>—</td><td>—</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+  <section class="panel">
+    <h2>מתי נגבית כל עמלה</h2>
+    <div class="tbl"><table class="ctab">
+      <thead><tr><th>עמלה</th><th>יחיד</th><th>עסק קטן</th><th>עסק גדול</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">טיפול במסגרת</th>
+          <td>אין עמלה על מסגרת עו"ש</td>
+          <td>1.25% · מינ' 500 · מקס' 10,000 ₪<br><span class="freq once">פעם אחת, בהעמדה</span><small>חידוש ללא שינוי ביטחונות – פטור · הגדלה – על ההפרש</small></td>
+          <td>1.25% · מינ' 500 · מקס' 10,000 ₪<br><span class="freq once">פעם אחת, בהעמדה</span><small>הגדלה באותו תוקף – על ההגדלה בלבד · פטור בחידוש לא מצוין</small></td></tr>
+        <tr><th scope="row">הקצאת אשראי</th>
+          <td>12 ₪<br><span class="freq q">כל רבעון, בסוף הרבעון</span><small>רק ברבעון שבו המסגרת לא נוצלה · בניצול חלקי – הגבוה מבין הריבית ל-12 ₪</small></td>
+          <td>0.45% ממלוא המסגרת<br><span class="freq q">כל רבעון, מראש</span><small>התחייבות לאשראי שאינו מסגרת עו"ש – בסוף כל חודש</small></td>
+          <td>0.565% ממלוא המסגרת<br><span class="freq q">כל רבעון, מראש</span><small>התחייבות לאשראי שאינו מסגרת עו"ש – בסוף כל חודש</small></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+  <section class="panel">
+    <h2>טבלת עזר</h2>
+    <p class="note">"אחרי הטבה" לפי ההטבה שנבחרה במחשבון.</p>
+    <div class="legend"><span><i class="sw" style="background:var(--same)"></i>נפל במינימום</span><span><i class="sw" style="background:var(--diff)"></i>נפל במקסימום</span></div>
+    <div class="tbl"><table class="ctab">
+      <thead>
+        <tr><th rowspan="2">סכום מסגרת</th><th colspan="2">טיפול · פעם אחת, בהעמדה<br><small>עסק קטן וגדול</small></th><th colspan="2">הקצאה עסק קטן · לרבעון</th><th colspan="2">הקצאה עסק גדול · לרבעון</th></tr>
+        <tr><th>מלא</th><th class="hd-disc">אחרי הטבה</th><th>מלא</th><th class="hd-disc">אחרי הטבה</th><th>מלא</th><th class="hd-disc">אחרי הטבה</th></tr>
+      </thead>
+      <tbody id="liRef"></tbody>
+    </table></div>
+  </section>
+  <div class="note"><b>שימו לב</b>
+    <ul>
+      <li><b>הקצאת אשראי לעסק קטן וגדול</b> מחושבת על מלוא סכום המסגרת ונגבית מראש בתחילת כל רבעון. ליחיד – 12 ₪ קבוע, רק ברבעון ללא ניצול.</li>
+      <li><b>עסק קטן מול גדול:</b> הטיפול זהה (1.25%); ההבדל בהקצאה – 0.45% מול 0.565% לרבעון.</li>
+      <li><b>בחידוש:</b> לעסק קטן חידוש ללא שינוי ביטחונות פטור מעמלת טיפול; לעסק גדול התעריפון לא מציין פטור כזה.</li>
+      <li>ריבית על הניצול אינה עמלה ואינה כלולה כאן.</li>
+    </ul>
+  </div>
+  <p class="note">מקורות: <a href="https://www.bankleumi.co.il/static-files/Commissions_Leumi/AmlotYechidimL.pdf">תעריפון יחידים ועסקים קטנים, סעיפים 3(א)(1)–3(א)(2)</a> · <a href="https://www.bankleumi.co.il/static-files/Commissions_Leumi/AmlotTaagidimL.pdf">תעריפון עסקים גדולים, סעיפים 3.2.1, 3.3.2</a></p>
+</section>
+
+</div>
+
+<script>
+// Row: [name, sub, individual, small, large, kind]
+// small null = same as individual; large "=" same for all, "=s" same as small; kind "tier" = indented; a row of [title, sub] alone = sub-heading
+const P='<b class="p">פ</b>', C='<b class="c">*</b>', N='לא בתעריפון';
+const s=x=>`<small>${x}</small>`;
+const ch=(t,d,n)=>`<span class="ch"><i>פקיד</i><span>${t}</span></span><span class="ch"><i>ישיר</i><span>${d}</span></span>`+(n?s(n):'');
+const usd=n=>'$'+(+n.toFixed(2)).toLocaleString('en-US',{maximumFractionDigits:2});
+const mm=(r,mn,mx,lo)=>{const p=[];if(mn!=null)p.push(`נפל במינימום ${lo?`מ-${usd(lo)} `:''}עד ${usd(mn/(r/100))}`);if(mx!=null)p.push(`במקסימום מ-${usd(mx/(r/100))}`);return `<small class="mm">${p.join(' · ')}</small>`};
+const tw=(l1,v1,l2,v2,n)=>`<span class="ch w"><i>${l1}</i><span>${v1}</span></span><span class="ch w"><i>${l2}</i><span>${v2}</span></span>`+(n?s(n):'');
+const cd=(v,p)=>`${v}${C}<span class="cn">מחושב · הנחה ${p}%</span>`;
+const G=[
+ {k:'osh',n:'עו"ש',r:[
+  ['דמי ניהול חשבון','',"אין",null,"220 ₪ לרבעון"],
+  ['רישום פעולה','נוסף לכל עמלה',"אין",null,"1.65 ₪ לפעולה"],
+  ['עמלת מינימום חודשית','',"עד 5.50 ₪",null,"אין (יש דמי ניהול)"],
+  ['פעולה בעו"ש','מזומן, העברה, שיק, שובר, תדפיס',ch("5.50 ₪"+P,"1.65 ₪"+P),null,"אין מחיר אחיד"+s("כל פעולה מתומחרת לבד ועליה 1.65 ₪ רישום פעולה")],
+  ['אזרח ותיק / אדם עם מוגבלות / ללא כרטיס','',"4 פעולות פקיד בחודש במחיר ערוץ ישיר",null,N],
+  ['מסלול בסיסי','1 פקיד + 10 ישיר',"10 ₪ לחודש"+P,null,"לא קיים"],
+  ['מסלול מורחב','10 פקיד + 50 ישיר',"25 ₪ לחודש"+P,null,"לא קיים"],
+  ['הפקדת מזומן / שיקים לחשבון','לכל קבוצה של עד 20 שיקים',ch("5.50 ₪","1.65 ₪"+s("כספומט: כל ההפקדות ביום = פעולה אחת")),null,ch("5.50 ₪","לא מצוין","+ 1.65 ₪ רישום פעולה")],
+  ['משיכת מזומן','עד 10,000 ₪',ch("5.50 ₪","1.65 ₪"+s("כספומט: כל המשיכות ביום = פעולה אחת")),null,ch("5.50 ₪","לא מצוין","+ 1.65 ₪ רישום פעולה")],
+  ['תשלום שובר','',ch("5.50 ₪","פטור"),null,ch("5.50 ₪","פטור","+ 1.65 ₪ רישום פעולה")],
+  ['שאילתות / תדפיס','',ch("5.50 ₪","אינטרנט פטור · עמדות מהשביעית בחודש 1.65 ₪"),null,ch("5.50 ₪","גישה/גלישה ישירה פטור · מידע לאומי: דף חשבון מעל 6 בחודש 1.65 ₪, אחרות 2.30 ₪")],
+  ['הוראת קבע / הרשאה – חיוב','',ch("—","1.65 ₪"),null,"4.20 ₪ להעברה"+s("מינ' 25.20 ₪ להוראה · לא תלוי ערוץ")],
+  ['ביטול הרשאה / הוראת קבע','',"לפני 6 חיובים: עד 6 פעולות ישיר",null,"5 ₪"],
+  ['מזומן מעל 10,000 ₪','ביום עסקים',"0.15%",null,"0.22%"],
+  ['מטבעות, לכל 100','',"2.40 ₪",null,"="],
+  ['סגירת חשבון','סך פעולות הסגירה',"עד 40 ₪",null,N],
+ ]},
+ {k:'trf',n:'העברות',r:[
+  ['העברה לחשבון אחר בלאומי','',ch("5.50 ₪","1.65 ₪"),null,ch("9 ₪","2.43 ₪","הנחה 73% (מצוין גם התעריף) · + 1.65 ₪ רישום · לחשבון שלי פטור")],
+  ['העברה רגילה לבנק אחר','',ch("5.50 ₪","1.65 ₪"),null,ch("45 ₪","2.70 ₪","הנחה 94% (מצוין גם התעריף) · + 1.65 ₪ רישום")],
+  ['זה"ב (RTGS) לבנק אחר','',ch("עד 1 מ' ₪: 5.50 ₪ · מעל: 37 ₪","עד 1 מ' ₪: 3.85 ₪ · מעל: 25.90 ₪"),null,ch("54 ₪",cd("37.80 ₪",30),"+ 1.65 ₪ רישום")],
+  ['העברות ברשימה / משכורות','לזיכוי',ch("5.50 ₪","1.65 ₪"),null,ch("17.30 ₪","1.73 ₪","הנחה 90% (מצוין גם התעריף)")],
+  ['משכורות לבנקים אחרים, תוך-יומי','לזיכוי',ch("5.50 ₪","1.65 ₪"),null,ch("17.30 ₪",cd("12.11 ₪",30))],
+  ['הוראת קבע לקיזוז יומי','חשבון מרכז',"230 ₪ לרבעון",null,"230 ₪ לרבעון לכל חשבון משנה"],
+ ]},
+ {k:'chq',n:'שיקים',r:[
+  ['פנקס שיקים רגיל','לשיק',ch("0.36 ₪"+P,"0.288 ₪"),null,ch("0.36 ₪"+P,cd("0.288 ₪",20))],
+  ['שיק רגיל עם העתק','לשיק',ch("0.64 ₪","0.512 ₪"),null,ch("0.64 ₪","לא מצוין")],
+  ['פנקסים מיוחדים','נספח ב\'',"4 אישיים 56 ₪ · עם העתק 96 ₪"+s("מסחריים אופסט: 5 פנקסים 278 ₪ · 10 פנקסים 522 ₪"),null,"="],
+  ['שיקים מסחריים, לשיק','250–3,000 שיקים',"2.42–0.72 ₪ לפי כמות ונייר"+s("מהשיק ה-1001 בנייר בדיד: 50% הנחה"),null,"="],
+  ['שיק בנקאי','',"12.90 ₪",null,"13.80 ₪"],
+  ['החזרת חיוב – אין כיסוי','גם מוגבל, מעוקל, צו · פטור עד 100 ₪',"55 ₪",null,"65 ₪"],
+  ['חיוב מוטב בהחזרת חיוב','',"19.20 ₪"+s("הצגה חוזרת 38 ₪"),null,"22 ₪"+s("הצגה חוזרת 38 ₪")],
+  ['ביטול שיק / חיוב בודד','',ch("17.60 ₪","14.08 ₪"),null,ch("19.80 ₪",cd("15.84 ₪",20))],
+  ['ביטול סדרת שיקים','',ch("עד 52.80 ₪","עד 42.24 ₪"),null,ch("79.20 ₪",cd("63.36 ₪",20))],
+  ['שיק דחוי – הפקדה','לשיק',ch("12 ₪","דיגיטל 9.60 · שידור 6 · סלולר 3.24 ₪"),null,ch("12 ₪","דיגיטל וסלולר 9.60 ₪","\"מייקר\" בבית העסק 7.50 ₪")],
+  ['שיק דחוי – שינוי מועד / החזרה','לשיק',ch("12 ₪","9.60 ₪"),null,ch("17 ₪","15.30 ₪")],
+  ['החזרת שיקים דחויים בסגירת חשבון','',"עד 5 ₪",null,N],
+  ['טיפול בשטרות','לשטר',"16.35 ₪",null,"="],
+ ]},
+ {k:'info',n:'מידע ותקשורת',r:[
+  ['הודעות והתראות','פיגור, התראה, חוק שיקים',"5 ₪"+P,null,"147 ₪"+s("כולל הודעות פיגור והתראות")],
+  ['מכתב התראה של עו"ד','',"147 ₪",null,"="],
+  ['הפקת מסמכים מהמאגר','',ch("זמין: 5 ₪ + 0.50 לעמוד · לא זמין: 10 ₪ + 0.50","פטור"),null,"שחזור דף חשבון 17 ₪ לדף"],
+  ['איתור מסמכים / שיקים','',"פטור"+s("בחברות האשראי 15 ₪"),null,ch("34.20 ₪ למסמך · שיק עד שנה 5.50 ₪","שיק עד שנה: פטור")],
+  ['דוחות סטנדרטיים / אישור יתרה','',"15 ₪"+P,null,"אישור יתרות 42 ₪ לחשבון"+s("דוחות לבקשת לקוח 24 ₪")],
+  ['מידע מיוחד הכרוך באיסוף','',"פטור",null,"50 ₪ לשעה"+s("מינ' 58 ₪")],
+  ['מדיה מגנטית / דיסק תנועות','לחודש',"140 ₪",null,"="],
+  ['דפי חשבון אלקטרוניים','לחודש',"140 ₪ (בחבילת המדיה)",null,"200 ₪"],
+  ['קבלת מידע ב-EDI','לחודש',"15 ₪",null,"="],
+  ['העברת קובץ מידע','לחודש',"70 ₪",null,"="],
+  ['דף תנועות יומי','לחודש',"70 ₪",null,"="],
+  ['דף תנועות בתדירות אחרת','לדף',"6 ₪",null,"="],
+  ['לאומי בזמן (SMS)','',"פטור",null,"="],
+  ['גישה ישירה למחשב הבנק','לחודש',"50 ₪","350 ₪","=s"],
+  ['שיגור פקס','לדף',N,null,"9.20 ₪"],
+  ['"שיק פלוס"','לחודש',N,null,"133 ₪"+s("3 חודשים ראשונים פטור")],
+  ['הודעת SWIFT / טלקס','',"לא נגבית",null,"$12"],
+  ['מידע עסקי על פירמה בחו"ל','',N,null,"$150"],
+ ]},
+ {k:'cred',n:'אשראי',r:[
+  ['הקצאת אשראי','לרבעון',"12 ₪"+s("רק באי-ניצול"),"0.45%","0.565%"+s("גם במט\"ח")],
+  ['טיפול במסגרת אשראי','',"אין (מסגרת עו\"ש)","1.25%"+s("מינ' 500 · מקס' 10,000 ₪"),"=s"],
+  ['ניכיון שיקים','',"125 ₪"+s("מעל 50,000 ₪"),null,"40 / 125 / 200 ₪"+s("עד 5 אלף / עד 100 אלף / מעל · פעם ביום")],
+  ['טיפול בהלוואה – מדרגות',"יחיד/קטן: 1.5%, מינ' 1,000, מקס' 10,000 ₪, רק מעל 100,000 ₪"],
+  ['עד 7,500 ₪','',"אין",null,"50 ₪",'tier'],
+  ['7,500 – 100,000 ₪','',"אין",null,"1.6%"+s("מינ' 300 ₪"),'tier'],
+  ['100,000 – 650,000 ₪','',"1.5%"+s("מינ' 1,000 ₪"),null,"1.5%"+s("מינ' 1,600 ₪"),'tier'],
+  ['650,000 ₪ – 1 מיליון','',"1.5%, עד מקסימום 10,000 ₪",null,"1.1%"+s("מינ' 10,000 ₪"),'tier'],
+  ['1 – 5 מיליון ₪','',"10,000 ₪ (נפל במקסימום)",null,"0.35%"+s("מינ' 11,000 ₪"),'tier'],
+  ['מעל 5 מיליון ₪','',"10,000 ₪ (נפל במקסימום)",null,"0.25%"+s("מינ' 17,500 · מקס' 40,000 ₪"),'tier'],
+  ['חידוש הלוואה','פירוט התנאים מתחת לטבלה',"פטור אם אין שינוי בביטחונות"+s("בהגדלה – על ההפרש"),null,"פטור ב-5 תנאים מצטברים"+s("בהגדלה – על ההגדלה")],
+  ['הלוואה בערבות מדינה','',"150 ₪",null,"="],
+  ['הלוואת CALL-ON','',N,null,"0.04%"+s("מינ' 50 · מקס' 300 ₪")],
+  ['הלוואות במכרז','',N,null,"30 ₪"],
+  ['דמי גבייה בהחזר תקופתי','לתשלום',N,null,"5.75 ₪"+s("הלוואת דיור 1.65 ₪ (פ)")],
+  ['פירעון מוקדם – עמלה תפעולית','',ch("60 ₪","48 ₪"),null,"60 ₪"],
+  ['טיפול בבקשה להלוואה לדיור','',"360 ₪",null,N],
+  ['גרירת הלוואה לדיור','',"360 ₪"+s("מענק 275 · ערבות/פיקדון ביניים 185 ₪"),null,N],
+  ['תעודת זכאות','',"60 ₪",null,N],
+  ['שינויים בהסכם הלוואה / תנאי ערבות','',"253 ₪"+s("מועד פירעון לדיור: מסגרת 125 ₪, נוספת 50 ₪, מקס' 225"),null,N],
+  ['רישום שעבוד אצל רשם','',"107 ₪",null,"רכב במשרד הרישוי: 107 ₪"],
+  ['שינוי / החלפת שעבודים','',"127 ₪"+s("בבנק או אצל רשם"),null,"127 ₪"],
+  ['הסכמה לשעבוד לבנק אחר','',"150 ₪ (כולל פרי-פסו)",null,"150 ₪"+s("שינוי פרי-פסו 75 ₪")],
+  ['מכתב החרגה','',N,null,"180 ₪"],
+  ['ליווי פיננסי / תיקי קבלנים','משווי הפרויקט למכירה',"1.25%",null,"="],
+  ['בדיקת ערבות שהתקבלה לטובת הבנק','',N,null,"0.2%"+s("מינ' 280 · מקס' 960 ₪ · ערבות צד ג' 150 ₪")],
+  ['הסדרי ביטחונות עם חברות בנות','לשנה',N,null,"4%"+s("מינ' 150 ₪ · לאומי ליסינג 1%, מינ' 136, מקס' 6,764")],
+  ['שמירת ביטחונות בין ישויות','לשנה',N,null,"2%, מינ' 265 ₪"+s("בחברות בנות בחו\"ל 0.25%, מינ' $722")],
+  ['ניכיון חייבים / ספקים','',N,null,"0.75%, מינ' 3,000 ₪"+s("הקמה 5,000 ₪ + 200 ₪ לכל חייב/ספק")],
+  ['ליסינג דרך לאומי ליסינג','לשנה',N,null,"רכב 0.3% (150–9,600 ₪)"+s("ציוד/משאית 0.6% (600–9,600 ₪)")],
+ ]},
+ {k:'grt',n:'ערבויות בש"ח',r:[
+  ['ערבות בנקאית מכל סוג','',"5% לשנה"+s("מינ' 396 ₪"),null,"="],
+  ['ערבות חוק מכר','',"4% לשנה",null,"4% לשנה"+s("מינ' 396 ₪ · טיפול 50 ₪")],
+  ['ערבות מובטחת בפיקדון','',"395 ₪ לשנה"+s("שכירות דירה עד 50 אלף: 260 ₪"),null,N],
+  ['תיקון ערבות','',"253 ₪",null,"="],
+  ['הסבת ערבות חוק מכר','',"183 ₪",null,"="],
+ ]},
+ {k:'fx',n:'מט"ח',r:[
+  ['המרה (חליפין)','נגבית בכל פעולה שיש בה המרה, בנוסף לעמלת הפעולה'],
+  ['חליפין שקל ↔ מט"ח','',ch("0.20% · $7.20–$3,000"+mm(.2,7.2,3000),"0.16% · $5.76–$2,400"+mm(.16,5.76,2400)),null,ch("0.22% · $7.20–$3,000"+mm(.22,7.2,3000),cd("0.176% · $5.76–$2,400",20)+mm(.176,5.76,2400))],
+  ['חליפין מט"ח ↔ מט"ח','',ch("0.30% · $10–$3,000"+mm(.3,10,3000),"0.24% · $8–$2,400"+mm(.24,8,2400)),null,ch("0.44% · $14.40–$6,000"+mm(.44,14.4,6000),cd("0.352% · $11.52–$4,800",20)+mm(.352,11.52,4800))],
+  ['חליפין ביום ללא מסחר במט"ח','בד"כ יום א\', לפי "שער יציג ידוע"',N,null,"2%, מינ' $7.20"+s("מט\"ח-מט\"ח 4%, מינ' $14.40")],
+  ['פטורים מחליפין','',"המרה מפמ\"ח פיצויים · פנסיה מחבר העמים ורנטות",null,N],
+  ['תשלום לחו"ל – איזו עמלה חלה','בחרו לפי מטרת התשלום'],
+  ['יבוא טובין – תשלום ישיר לספק','חשבון פתוח / טרנזיט · חלק 7 בתעריפון',ch("0.5% · מינ' $30"+mm(.5,30),"0.45% · מינ' $27"+mm(.45,27)),null,ch("0.5% · מינ' $30"+mm(.5,30),cd("0.45% · מינ' $27",10)+mm(.45,27))],
+  ['יבוא שירותים / תשלום לסוכן','עמלת העברה רגילה לחו"ל',"כמו העברה לחו\"ל",null,"="],
+  ['העברה לחו"ל','בפועל מתבצעת רק בערוץ ישיר',ch("0.225% · $22.50–$150"+mm(.225,22.5,150,600),"0.2025% · $20.25–$135"+mm(.2025,20.25,135,600)),null,ch("0.225% · $22.50–$200"+mm(.225,22.5,200,200),cd("0.2025% · $20.25–$180",10)+mm(.2025,20.25,180,200))],
+  ['העברה קטנה לחו"ל','יחיד/קטן עד $600 · גדול עד $200',ch("$10","$9"),null,ch("$10",cd("$9",10))],
+  ['תוספת SWIFT להעברה יוצאת','',"לא נגבית",null,"$12 להודעה"+s("נוסף על העמלה ועל הקורספונדנט")],
+  ['הוצאות OUR (המוטב לא משלם)','',"לפי חיוב הבנק בחו\"ל",null,"="],
+  ['קבלה מחו"ל – איזו עמלה חלה','בחרו לפי מקור הכסף'],
+  ['תמורת יצוא טובין או שירותים','יצוא ישיר · חלק 7 בתעריפון',tw("עד $200","$8","מעל $200","0.15% · מינ' $20 · מקס' $200"+mm(.15,20,200,200)),null,"="],
+  ['קבלת העברה אחרת מחו"ל','',tw("עד $600","$10","מעל $600","0.225% · מינ' $22.50 · מקס' $150"+mm(.225,22.5,150,600)),null,tw("עד $200","$10","מעל $200","0.225% · מינ' $22.50 · מקס' $200"+mm(.225,22.5,200,200))],
+  ['העברה נכנסת פטורה','',"עם הערת OUR / PAY IN FULL · מגביית שיק או בנקנוט"+s("רנטות לנפגעי הנאצים · פנסיה מחבר העמים"),null,"עם הערת OUR / PAY IN FULL · מגביית שיק או בנקנוט"+s("תושב חוץ שמעביר מחשבונו להשקעה בבנק")],
+  ['הערת BEN ביצוא','',"היצואן משלם את הוצאות הבנק בחו\"ל",null,"="],
+  ['העברות מט"ח בארץ'],
+  ['לחשבון אותו לקוח בבנק אחר','',ch("$10"+P,"$9"),null,ch("$10"+P,cd("$9",10),"+ SWIFT $12")],
+  ['לבנק אחר בארץ – יוצאת','',ch("0.15% · $22.50–$150 · עד $600: $10"+mm(.15,22.5,150,600),"0.135% · $20.25–$135 · עד $600: $9"+mm(.135,20.25,135,600)),null,ch("0.175% · $22.50–$150"+mm(.175,22.5,150),cd("0.1575% · $20.25–$135",10)+mm(.1575,20.25,135),"+ SWIFT $12")],
+  ['מבנק אחר בארץ – נכנסת','',tw("עד $600","$10","מעל $600","0.15% · מינ' $22.50 · מקס' $150"+mm(.15,22.5,150,600)),null,tw("עד $200","$10","מעל $200","0.225% · מינ' $22.50 · מקס' $200"+mm(.225,22.5,200,200))],
+  ['בתוך הבנק','',ch("$5.70","$5.13","לחשבון אותו לקוח פטור"),null,ch("$5.70","לא מצוין","לחשבון המעביר פטור")],
+  ['הוראת קבע במט"ח','',"$2.50"+s("לפיקדון מט\"ח בתשלומים פטור"),null,"="],
+  ['העברה בסגירת חשבון','לאותו לקוח',"עד 10 ₪",null,N],
+  ['שיקים ומזומן במט"ח'],
+  ['שיק בנקאי במט"ח','',"0.25%"+s("מינ' $10 · מקס' $85")+mm(.25,10,85),null,"0.25%"+s("מינ' $18 · מקס' $85 · + SWIFT לפי העניין")+mm(.25,18,85)],
+  ['גביית שיקים במט"ח','',"0.3%"+s("מינ' $18.50 · מקס' $90")+mm(.3,18.5,90),null,"="],
+  ['הפקדת שיק / המחאת נוסעים','',"עם ימי ערך: $3.20"+s("ללא ימי ערך: 0.5% + $3.20"),null,"="],
+  ['שיק משוך על חשבון מט"ח, מוצג לגבייה','',"0.16%"+s("מינ' $10 · מקס' $200 · דרך סניף לאומי $3")+mm(.16,10,200),null,"0.175%"+s("מינ' $20 · מקס' $100 · דרך סניף לאומי $3")+mm(.175,20,100)],
+  ['הפקדה / משיכת מזומן מט"ח','באותו מטבע',"הפרש שער מזומן ↔ העברות"+s("בכספומט 10% הנחה על ההפרש"),null,"="],
+  ['משיכה בכספומט"ח','',"חליפין פטור",null,"$7.20"+s("פטור בכל מכשירי הכספומט\"ח")],
+  ['החלפת מזומן פגום / ישן','',"1%"+s("מינ' $30 · מקס' $100")+mm(1,30,100),null,"="],
+  ['חשבון מט"ח'],
+  ['ניהול חשבון מט"ח עסקי','',"אין",null,"$15 לחודש"+s("תושב חוץ פטור")],
+  ['רישום פעולה בחשבון מט"ח','',"אין",null,"1.65 ₪ לפעולה"+s("תושב חוץ פטור")],
+  ['דף חשבון מט"ח בתדירות מיוחדת','לדף',"6 ₪",null,"$1.70"],
+  ['כיסוי אוטומטי יתרת חובה','',"1.5% מעל השער היציג"+s("כולל מרווח 0.92% + עמלה 0.58%"),null,N],
+ ]},
+ {k:'deal',n:'עסקאות ונגזרים',r:[
+  ['ספוט / פורוורד מט"ח-מט"ח','לפי שווי',"עד $20 אלף 1% · עד $50 אלף 0.5% · עד $100 אלף 0.3%"+s("עד $200 אלף 0.15% · עד $500 אלף 0.1% · עד $1 מ' 0.075% · מעל 0.05%"),null,"="],
+  ['הגבלת שער שלא נתפסה','',"$14",null,"="],
+  ['אופציות מט"ח רגילות','לחוזה',"$30"+s("חוזה כפול $60"),null,"="],
+  ['אופציות מט"ח בינבנקאיות','',"$0.25–0.5 מ': 0.1% · $0.5–1 מ': 0.075% · מעל: 0.05%"+s("עד $0.25 מ' – מגולם בשער"),null,"="],
+  ['מתכות יקרות – ספוט','',"עד $25 אלף: 0.7%, מינ' $70"+s("מעל: 0.5%, מינ' $175"),null,"="],
+  ['מתכות יקרות – עתידי','',"עד $50 אלף: 0.35%, מינ' $40"+s("מעל: 0.2%, מינ' $175"),null,"="],
+  ['חוזים עתידיים בחו"ל','לחוזה',"$22.50 (מינ' $45 לפקודה)"+s("אג\"ח בדולר $21 · אירו €20 · ליש\"ט £11 · ין ¥2,800"),null,"="],
+ ]},
+ {k:'sec',n:'ניירות ערך',r:[
+  ['ק/מ מניות ואג"ח בת"א','',ch("0.65% · 27–7,000 ₪","0.4% · 26–6,300 ₪"),null,ch("עד 30 אלף 0.75% (מינ' 27) · עד 50 אלף 0.7% (מינ' 210) · מעל 0.65% (מינ' 350 ₪)","אותו שיעור · מינ' 27 ₪")],
+  ['מק"מ / אג"ח עד שנה','',ch("0.1% · 20–2,000 ₪","0.095% · 18–1,800 ₪"),null,"0.1%"+s("מינ' 20 ₪")],
+  ['אופציות מעו"ף','ליחידה',ch("5% · 20–400 ₪","3.8% · 18–360 ₪"),null,"5%"+s("מינ' 20 ₪ ליחידה · מימוש 0.5%, מינ' 27")],
+  ['חוזים עתידיים במעו"ף','',"0.25% משווי החוזה"+s("ריבית / אג\"ח שחר: 50 ₪ לחוזה"),null,"="],
+  ['ק/מ ני"ע בחו"ל','',ch("0.9% · $25–$7,500","0.3% · $24–$6,750"),null,ch("עד $25 אלף 0.95% (מינ' $80) · מעל 0.9% (מינ' $260)","לאומי טרייד: 0.3% · מינ' $25")],
+  ['אופציות בחו"ל','ליחידה',ch("5% · $7–$300","$2"),null,ch("5% · מינ' $7","לאומי טרייד: $2")],
+  ['דמי ניהול ני"ע בת"א','לרבעון',"0.15%"+s("מקס' 3,700 ₪ לני\"ע · 11,500 ₪ לפיקדון"),null,"0.15%"+s("מינ' 5.50 ₪ לני\"ע · 27 ₪ לפיקדון")],
+  ['דמי ניהול ני"ע בחו"ל','לרבעון',"0.2%"+s("מקס' 7,400 ₪ לני\"ע · 23,000 ₪ לפיקדון"),null,"0.2%"+s("מינ' 30 ₪ לני\"ע · 60 ₪ לפיקדון")],
+  ['ק/מ שלא בוצעה','',"25 ₪",null,"="],
+  ['העברת ני"ע לאותו לקוח בגוף אחר','',"5 ₪"+P,null,"="],
+  ['העברת ני"ע ללקוח אחר','',"0.25%"+s("מינ' 27 ₪ · מקס' 850 ₪"),null,"0.25%"+s("מינ' 27 ₪")],
+  ['המרת אג"ח / מימוש אופציות','',"0.4%"+s("מינ' 24 ₪"),null,"="],
+  ['המרה בין נייר בארץ לבחו"ל','',"$45",null,"="],
+  ['הזמנה בהנפקה – אג"ח ממשלתיות','',"0.1%"+s("מינ' 27 ₪"),null,"0.5%"+s("מינ' 27 ₪")],
+  ['הזמנה בהנפקה – שאר ני"ע','',"0.05%"+s("מינ' 27 ₪"),null,"="],
+  ['ריבית ודיבידנד','',N,null,"0.5%"+s("מינ' 8.50 ₪")],
+  ['פדיון ני"ע','',"כמו ק/מ",null,"ישראלי 0.65%, מינ' 27 ₪"+s("זר 0.9%, מינ' $25")],
+  ['עמלת הפצה בקרן נאמנות','',"סוג 1: 0.2% · סוג 3: 0.35% · סוג 4: 0.1%",null,"="],
+  ['השאלת ני"ע למכירה בחסר','לחודש',"מניות 0.5%"+s("אג\"ח ומק\"מ 0.25%"),null,"="],
+  ['עמלת קסטודיאן','',"0.03%"+s("מינ' 27 · מקס' 15,000 ₪"),null,"0.03%"+s("מינ' 27 ₪ · מוסדיים 500 ₪ לפעולה")],
+  ['הפקדה / משיכה פיזית של ני"ע','',N,null,"לא סחירים 0.25% (27–113 ₪)"+s("זרים / סחירים 1% ($50–$500)")],
+ ]},
+ {k:'trade',n:'סחר חוץ',r:[
+  ['יבוא','זהה בשני התעריפונים · "ישיר" = גישה ישירה / On Trade / אינטרנט'],
+  ['טיפול בדוקומנטים לגבייה','',"0.8%"+s("מינ' $40"),null,"="],
+  ['תשלום דחוי של דוקומנטים','',ch("0.125% · מינ' $35","0.1125% · מינ' $31.50","בעסק גדול הישיר מחושב מהנחה 10%"),null,"="],
+  ['אישור זמני / הסבת שטר מטען','לפני קבלת המסמכים',ch("0.2% · מינ' $50","0.18% · מינ' $45","בעסק גדול הישיר מחושב מהנחה 10%"),null,"="],
+  ['תיקון בתנאי דוקומנטים לגבייה','',"$30",null,"="],
+  ['אחסנה במחסני ערובה','',"0.25%"+s("מינ' $60"),null,"="],
+  ['יבוא ישיר','חשבון פתוח / טרנזיט',ch("0.5% · מינ' $30"+mm(.5,30),"0.45% · מינ' $27"+mm(.45,27),"בעסק גדול הישיר מחושב מהנחה 10%"),null,"="],
+  ['הכנת מסמכים לעסקה מורכבת','',"0.1%"+s("מינ' $100 · מקס' $5,000 · חצי מוחזר אם בוצעה בלאומי"),null,"="],
+  ['יצוא'],
+  ['משלוח דוקומנטים לגבייה','',"0.25%"+s("מינ' $50"),null,"="],
+  ['כל תשלום דחוי מהשני ואילך','',"0.125%"+s("מינ' $35"),null,"="],
+  ['גבייה מעל חודש מעבר לפירעון','לחודש או חלקו',"0.035%"+s("מינ' $30"),null,"="],
+  ['דמי טיפול בעסקת ניכיון','',"0.15%"+s("מינ' $100 · מקס' $500"),null,"="],
+  ['תיקון בעסקת דוקומנטים לגבייה','',"$30",null,"="],
+  ['יצוא ישיר – זיכוי תמורות','',tw("עד $200","$8","מעל $200","0.15% · מינ' $20 · מקס' $200"+mm(.15,20,200,200)),null,"="],
+  ['קניית שיק בעסקת יצוא','',"0.5% + $3.20 לשיק",null,"="],
+  ['ערבויות במט"ח'],
+  ['הוצאת ערבות במט"ח','מקדמה, מכרז, ביצוע, אשראי ספקים',"5% לשנה"+s("מינ' $115"),null,"="],
+  ['ערבות STANDBY','',"5%"+s("מינ' $99"),null,"="],
+  ['תיקון ערבות במט"ח','',"$62",null,"="],
+  ['ערבות מבנק אחר – הודעה למוטב','',"0.15%"+s("מינ' $50 · מקס' $190"),null,"="],
+  ['ערבות מבנק אחר – חילוט / הארכה','',"$67",null,"="],
+  ['פנייה לבנק בחו"ל לשינוי נוסח','',"$35",null,"="],
+  ['תקשורת ושונות'],
+  ['דואר לחו"ל – סט דוקומנטים','',"$6"+s("אקספרס +$4 · מכתב $2.50"),null,"="],
+  ['בלדר / פקס / טלפון','',"$10 + עלות הבלדר"+s("פקס $0.60 ממוכן / $2 ידני · טלפון לחו\"ל $4 לדקה"),null,"="],
+  ['בירורים בעסקת סחר חוץ','',"$20",null,"="],
+  ['עסקה לא מורכבת שלא יצאה לפועל','',"$250",null,"="],
+ ]},
+ {k:'lc',n:'אשראי דוקומנטרי',r:[
+  ['פתיחת א"ד יבוא וניצול ראשון','לשנה',ch("5% · מינ' $195","4.5% · מינ' $175.50","בעסק גדול הישיר מחושב מהנחה 10%"),null,"="],
+  ['הגדלה / הארכת א"ד יבוא','לשנה',ch("5% · מינ' $75","4.5% · מינ' $67.50","בעסק גדול הישיר מחושב מהנחה 10%"),null,"="],
+  ['טיפול בא"ד מקוים','',ch("0.15% · מינ' $60","0.135% · מינ' $54","בעסק גדול הישיר מחושב מהנחה 10%"),null,"="],
+  ['ניצול נוסף במסגרת א"ד','מהמשלוח השני',"$50",null,"="],
+  ['תיקון א"ד יבוא','',ch("$60","$54","בעסק גדול הישיר מחושב מהנחה 10%"),null,"="],
+  ['קיבול (אקצפט) בא"ד יבוא','לשנה',"5%"+s("מינ' $99"),null,"="],
+  ['הודעה ליצואן על פתיחת א"ד','',"0.15%"+s("מינ' $50 · מקס' $190"),null,"="],
+  ['תיקון א"ד יצוא / הודעה מקדמית','',"$50",null,"="],
+  ['ניצול א"ד יצוא','',"0.6%"+s("מינ' $90 לניצול"),null,"="],
+  ['זיכוי תמורות א"ד','',"0.15%"+s("מינ' $20 · מקס' $200"),null,"="],
+  ['דוקומנטים עם הסתייגויות','לסט',"$30",null,"="],
+  ['העברת א"ד (Transfer)','',"0.75%"+s("מינ' $90"),null,"="],
+  ['המחאת זכויות מוטב','',"0.2%"+s("מינ' $50"),null,"="],
+  ['זיכוי יצואן על סמך כתב שיפוי','',"0.1%"+s("מינ' $40"),null,"="],
+  ['קיום א"ד לטובת יצואן','לשנה, לפי סיכון מדינה ובנק',"0.4%"+s("מינ' 70 ₪"),null,"0.4%"+s("מינ' $70")],
+  ['אקצפט לטובת יצואן','לשנה',"0.9%+"+s("מינ' $70 · לפי סיכון מדינה ובנק"),null,"="],
+  ['ניכיון אקצפט','',"$50 + עמלת סיכון",null,"="],
+  ['בדיקה מקדמית של מסמכים','מהשנייה',"$50",null,"="],
+ ]},
+ {k:'card',n:'כרטיסים',r:[
+  ['דביט (חיוב מיידי)','לחודש',"7 ₪"+P,null,"="],
+  ['ויזה מקומי / בינלאומי / זהב','לחודש',"16 / 18.40 / 19.70 ₪",null,"="],
+  ['עסקי / פלטינה / FIRST','לחודש',"20 / 24 / 40 ₪",null,"="],
+  ['UNITED / INFINITE','לחודש',"31.90 / 400 ₪",null,"31.90 ₪ / "+N],
+  ['FLYCARD / Premium Select / Premium','לחודש',"19.90 / 27.90 / 38.90 ₪",null,"="],
+  ['דיינרס','לחודש',"15.30 ₪"+s("FLYCARD 19.90 · Premium 31.90 · FLYALL 17.90 · Premium 24.90"),null,"="],
+  ['עסקה במט"ח / משיכה בחו"ל','',"3%"+s("FIRST 2% · UNITED 1.5% (משיכה 2.55%)"),null,"="],
+  ['משיכה מחשבון באותו מטבע','',"19 ₪"+s("דיינרס 16 ₪"),null,"="],
+  ['רכישת מט"ח מחלפן בכרטיס','',"$6",null,"="],
+  ['כרטיס חליפי','מיידי: 50 ₪',ch("30 ₪","15 ₪"),null,ch("30 ₪","15 ₪","לפי הפניה לנספח ה' של התעריפון הקמעונאי")],
+  ['הכחשה לא מוצדקת','',"15 ₪"+s("דיינרס 30 ₪"),null,"="],
+  ['פירעון מוקדם של עסקאות','',"40 ₪"+s("דיינרס 30 ₪"),null,"="],
+  ['דמי טעינה (נטען)','',ch("1.65 ₪","1 ₪ (הו\"ק ואינטרנט)"),null,"="],
+ ]},
+ {k:'spec',n:'שירותים מיוחדים',r:[
+  ['כספת','לשנה, לפי גודל',"1,750 / 1,800 / 2,000 / 2,200 / 2,400 ₪",null,"="],
+  ['אחריות מיוחדת בכספת','לשנה',"0.5%",null,"="],
+  ['משיכה במכשיר מרוחק בכרטיס של בנק אחר','',"5 ₪",null,"="],
+  ['משיכה בכרטיס שהונפק בחו"ל','',"13.90 ₪",null,"="],
+  ['משלוח חומר בשליח ללקוח','',"85 ₪",null,"="],
+  ['מס"ב – הקמת הרשאה','',"15 ₪",null,"="],
+  ['מס"ב – חיוב בהרשאה','',"2.10 ₪",null,"="],
+  ['מס"ב – קובץ זיכויים / חיובים','',"13.50 ₪ / 8 ₪",null,"="],
+  ['מס"ב – הסבת קוד מוטב / שובר','',"6.35 ₪ / 5.10 ₪",null,"="],
+  ['טיפול בדוחות לצרכי מס','לדוח שנתי',"750 ₪",null,"="],
+  ['ייעוץ פנסיוני חד-פעמי','לפי שווי נכסים',"1,500 / 2,000 / 3,000 ₪"+s("עד 1 מ' / עד 2 מ' / מעל"),null,N],
+  ['חשבון חברה זרה','בפתיחה',N,null,"5,000 ₪"],
+  ['חשבון נש"פ (נותן שירות פיננסי)','',N,null,"פתיחה 10,000 ₪"+s("חודשי: 13,000 / 17,000 / 22,000 ₪ לפי פעולות")],
+  ['חשבון נאמנות','לכל נהנה',N,null,"350 ₪ (עד 3) / 650 ₪"+s("שינוי נהנים 650 ₪")],
+  ['קרן גידור','',N,null,"שותף 3,000 ₪ (מקס' 50,000)"+s("החזקה 0.025% לרבעון, מינ' 2,500 ₪")],
+ ]},
+];
+
+const tb=document.querySelector('#t tbody'), tbl=document.getElementById('t');
+const cell=(html,span,cls,lab)=>`<td class="v ${cls}" data-l="${lab}" ${span>1?`colspan="${span}"`:''} tabindex="0"><span class="t">${html}</span></td>`;
+function rowHtml(r){
+  if(r.length<=2) return `<tr class="sg"><th colspan="4">${r[0]}${r[1]?`<small>${r[1]}</small>`:''}</th></tr>`;
+  const [n,sub,i,sm,l,k]=r;
+  const tr=k==='tier'?'<tr class="tier">':'<tr>';
+  const name=`<td class="name">${n}${sub?`<small>${sub}</small>`:''}</td>`;
+  if(l==='=') return `${tr}${name}${cell(i,3,'same','כל הלקוחות')}</tr>`;
+  if(l==='=s') return `${tr}${name}${cell(i,1,'','יחיד')}${cell(sm,2,'same','עסק קטן וגדול')}</tr>`;
+  const left=sm===null?cell(i,2,'same','יחיד ועסק קטן'):cell(i,1,'','יחיד')+cell(sm,1,'','עסק קטן');
+  return `${tr}${name}${left}${cell(l,1,'diff','עסק גדול')}</tr>`;
+}
+const isDiff=r=>r.length>2 && r[4]!=='=';
+const text=r=>r.join(' ').replace(/<[^>]+>/g,' ');
+
+// filter state: one topic at a time, or all
+let cur='all';
+try{const v=localStorage.getItem('cat1'); if(v&&(v==='all'||G.some(g=>g.k===v))) cur=v;}catch(e){}
+let on=new Set(cur==='all'?G.map(g=>g.k):[cur]);
+const cats=document.getElementById('cats'), q=document.getElementById('q'), diffOnly=document.getElementById('diffOnly');
+cats.setAttribute('role','radiogroup');
+cats.innerHTML=`<button class="chip" type="button" role="radio" data-k="all">הכל</button>`+G.map(g=>`<button class="chip" type="button" role="radio" data-k="${g.k}">${g.n}</button>`).join('');
+function mark(){cats.querySelectorAll('[data-k]').forEach(c=>{const a=c.dataset.k===cur;c.setAttribute('aria-pressed',a);c.setAttribute('aria-checked',a)})}
+mark();
+cats.addEventListener('click',e=>{
+  const b=e.target.closest('[data-k]'); if(!b) return;
+  cur=b.dataset.k; on=new Set(cur==='all'?G.map(g=>g.k):[cur]); mark(); try{b.scrollIntoView({inline:'nearest',block:'nearest'})}catch(e){}
+  try{localStorage.setItem('cat1',cur)}catch(e){}
+  render();
+});
+q.addEventListener('input',render);
+q.addEventListener('keydown',e=>{if(e.key==='Escape'){q.value='';render()}});
+document.addEventListener('keydown',e=>{if(e.key==='/'&&document.activeElement!==q&&!/INPUT|TEXTAREA/.test(document.activeElement.tagName)){e.preventDefault();document.querySelector('[data-tab=fees]').click();q.focus()}}); diffOnly.addEventListener('change',render);
+
+function render(){
+  const term=q.value.trim(), d=diffOnly.checked; let out='', n=0;
+  for(const g of G){
+    if(!term && !on.has(g.k)) continue;
+    let body='', pendingSub='';
+    for(const r of g.r){
+      if(r.length<=2){ pendingSub=rowHtml(r); continue; }
+      if(d && !isDiff(r)) continue;
+      if(term && !text(r).includes(term) && !g.n.includes(term)) continue;
+      body+=pendingSub+rowHtml(r); pendingSub=''; n++;
+    }
+    if(body) out+=`<tr class="grp"><th colspan="4">${g.n}</th></tr>`+body;
+  }
+  tb.innerHTML=out;
+  document.getElementById('empty').hidden=n>0;
+  document.getElementById('count').textContent=term?`${n} תוצאות בכל הנושאים`:`${n} עמלות`;
+  cats.classList.toggle('dim',!!term);
+}
+render();
+
+</script>
+<script>
+(()=>{
+/* ---------- shared ---------- */
+const r2=n=>Math.round(n*100)/100;
+const nf=n=>{const r=r2(n);return r.toLocaleString('en-US',{minimumFractionDigits:Number.isInteger(r)?0:2,maximumFractionDigits:2})};
+const ILS=n=>nf(n)+' ₪', USD=n=>'$'+nf(n);
+const num=v=>Number(String(v).replace(/[^\d.]/g,''))||0;
+const short=(v,c)=>(c==='$'?'$':'')+(v>=1e6?(v/1e6)+'M':v>=1000?(v/1000)+'K':v);
+const tag=b=>b==='min'?'<span class="tag">נפל במינימום</span>':b==='max'?'<span class="tag">נפל במקסימום</span>':'';
+const range=(...segs)=>{const a=[];segs.forEach(([from,to,step])=>{for(let v=from;v<=to+1e-9;v+=step)if(!a.length||v>a[a.length-1])a.push(+v.toFixed(2))});return a};
+// slider + text box + preset chips, all in sync
+function control(id,{vals,init,presets,label,onChange}){
+  const inp=document.getElementById(id+'In'), rng=document.getElementById(id+'R'), pre=document.getElementById(id+'P');
+  let val=init;
+  const near=v=>{let b=0;vals.forEach((x,i)=>{if(Math.abs(x-v)<Math.abs(vals[b]-v))b=i});return b};
+  rng.min=0; rng.max=vals.length-1; rng.step=1;
+  pre.innerHTML=presets.map(v=>`<button class="chip" type="button" data-p="${v}">${label(v)}</button>`).join('');
+  const sync=(from)=>{ if(from!=='inp') inp.value=val.toLocaleString('en-US'); if(from!=='rng') rng.value=near(val);
+    pre.querySelectorAll('[data-p]').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.p===val)); onChange(val); };
+  rng.addEventListener('input',()=>{val=vals[+rng.value];sync('rng')});
+  inp.addEventListener('input',()=>{val=num(inp.value);sync('inp')});
+  inp.addEventListener('blur',()=>{inp.value=val.toLocaleString('en-US')});
+  inp.addEventListener('focus',()=>{try{inp.select()}catch(e){}});
+  pre.addEventListener('click',e=>{const b=e.target.closest('[data-p]');if(!b)return;val=+b.dataset.p;sync()});
+  return {get:()=>val,init:()=>sync()};
+}
+function seg(id,init,onChange){
+  const el=document.getElementById(id); let v=init;
+  const mark=()=>el.querySelectorAll('[data-v]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===v));
+  el.addEventListener('click',e=>{const b=e.target.closest('[data-v]');if(!b)return;v=b.dataset.v;mark();onChange()});
+  mark(); return {get:()=>v};
+}
+// percentage fee with min/max, discount d, method 'all' | 'rate'
+function fee(t,a,d=0,m='all'){
+  if(!t||t.none) return {base:0,final:0,bind:''};
+  if(t.fixed!=null) return {base:t.fixed,final:m==='all'?t.fixed*(1-d):t.fixed,bind:'',fixed:true};
+  const raw=a*t.rate/100; let base=raw,bind='';
+  if(t.min!=null&&base<t.min){base=t.min;bind='min'}
+  if(t.max!=null&&base>t.max){base=t.max;bind='max'}
+  let fin;
+  if(m==='all') fin=base*(1-d);
+  else{fin=raw*(1-d); if(t.min!=null&&fin<t.min)fin=t.min; if(t.max!=null&&fin>t.max)fin=t.max;}
+  return {raw,base,bind,final:fin};
+}
+function thrText(t,C,k=1){
+  if(!t||t.rate==null) return '';
+  const r=t.rate*k/100, p=[];
+  if(t.min!=null){const x=t.min/r; p.push(t.lo!=null&&x<=t.lo?'מינימום: לא חל במדרגה זו':`מינימום ${t.lo>0?'מ-'+C(t.lo)+' ':''}עד ${C(t.hi!=null?Math.min(x,t.hi):x)}`);}
+  if(t.max!=null){const y=t.max/r; p.push(t.hi!=null&&y>=t.hi?'מקסימום: לא חל במדרגה זו':`מקסימום מ-${C(t.lo!=null?Math.max(y,t.lo):y)}`);}
+  return p.join(' · ');
+}
+// one result block: title, amount, frequency pill, calculation lines
+function block({title,amount,freq,per='',lines=[],note=''}){
+  return `<div class="blk">${title?`<div class="blk-h">${title}</div>`:''}<div class="big">${amount}${per?` <small class="per">${per}</small>`:''}</div>
+    ${freq?`<span class="freq ${freq[0]}">${freq[1]}</span>`:''}
+    ${lines.length?`<ul class="steps">${lines.map(l=>`<li${l.th?' class="th"':''}><b>${l.k}</b><span>${l.v}</span></li>`).join('')}</ul>`:''}
+    ${note?`<div class="alt">${note}</div>`:''}</div>`;
+}
+const card=(h,inner)=>`<article class="card"><h2>${h}</h2>${inner}</article>`;
+function feeLines(t,a,x,d,C){
+  const L=[];
+  if(t.label) L.push({k:'מדרגה',v:t.label});
+  if(t.none) return L;
+  if(t.fixed!=null) L.push({k:'עמלה קבועה',v:C(t.fixed)});
+  else{
+    L.push({k:`<bdi dir="ltr">${C(a)} × ${t.rate}%</bdi>`,v:C(x.raw)});
+    if(t.min!=null||t.max!=null) L.push({k:'מינימום / מקסימום',v:`${t.min!=null?C(t.min):'—'} / ${t.max!=null?C(t.max):'—'}`});
+  }
+  if(x.bind) L.push({k:'תעריף',v:C(x.base)+' '+tag(x.bind)});
+  if(d>0) L.push({k:`אחרי הטבה ${+(d*100).toFixed(2)}%`,v:C(x.final)});
+  const th=thrText(t,C); if(th) L.push({k:th,v:'',th:1});
+  return L;
+}
+const discCtl=(id,cb)=>control(id,{vals:range([0,100,5]),init:0,presets:[0,50,75,90],label:v=>v+'%',onChange:cb});
+
+/* ---------- FX ---------- */
+(()=>{
+  const P=(rate,min,max,label,lo,hi)=>({rate,min,max,label,lo,hi});
+  const flat=(v,label)=>({fixed:v,label});
+  function rule(op,seg,ch,a){
+    const d=ch==='d';
+    if(op==='out'){
+      if(seg==='r') return a<=600?flat(d?9:10,'עד $600'):(d?P(.2025,20.25,135,'מעל $600 · ישיר',600):P(.225,22.5,150,'מעל $600 · פקיד',600));
+      return a<=200?flat(d?9:10,'עד $200'):(d?P(.2025,20.25,180,'מעל $200 · ישיר (מחושב)',200):P(.225,22.5,200,'מעל $200 · פקיד',200));
+    }
+    if(op==='in'){
+      if(seg==='r') return a<=600?flat(10,'עד $600'):P(.225,22.5,150,'מעל $600',600);
+      return a<=200?flat(10,'עד $200'):P(.225,22.5,200,'מעל $200',200);
+    }
+    if(op==='imp') return d?P(.45,27,null,'יבוא ישיר · ישיר'+(seg==='l'?' (מחושב)':''),0):P(.5,30,null,'יבוא ישיר · פקיד',0);
+    return a<=200?flat(8,'עד $200'):P(.15,20,200,'מעל $200',200);
+  }
+  const conv=(seg,d)=>seg==='r'?(d?P(.16,5.76,2400,'',0):P(.2,7.2,3000,'',0)):(d?P(.176,5.76,2400,'',0):P(.22,7.2,3000,'',0));
+  const names={out:'העברה לחו"ל',imp:'יבוא ישיר',in:'קבלה מחו"ל',exp:'יצוא ישיר'};
+  const op=seg('fxOp','out',draw), ch=seg('fxCh','d',draw), cv=document.getElementById('fxConv');
+  cv.addEventListener('change',draw);
+  const amt=control('fxAmt',{vals:range([100,1000,50],[1000,20000,250],[20000,200000,2500],[200000,2000000,25000]),init:10000,
+    presets:[1000,5000,10000,50000,100000],label:v=>short(v,'$'),onChange:draw});
+  function draw(){
+    if(!amt) return;
+    const a=amt.get(), o=op.get(), chRel=o==='out'||o==='imp';
+    document.getElementById('fxCh').hidden=!chRel;
+    const c=chRel?ch.get():'t';
+    const out=['r','l'].map(sg=>{
+      const t=rule(o,sg,c,a), x=fee(t,a);
+      let total=x.final; const lines=feeLines(t,a,x,0,USD);
+      lines.unshift({k:names[o],v:USD(x.final)});
+      if(cv.checked){const ct=conv(sg,c==='d'||!chRel),cx=fee(ct,a);total+=cx.final;
+        lines.push({k:`המרה <bdi dir="ltr">${ct.rate}%</bdi>${cx.bind?' '+tag(cx.bind):''}`,v:USD(cx.final)});}
+      if(sg==='l'&&chRel){total+=12;lines.push({k:'SWIFT',v:USD(12)});}
+      return card(sg==='r'?'יחיד ועסק קטן':'עסק גדול',block({amount:USD(total),freq:['once','בביצוע'],lines}));
+    });
+    document.getElementById('fxCards').innerHTML=out.join('');
+  }
+  amt.init();
+})();
+
+/* ---------- loans ---------- */
+(()=>{
+  const tR=a=>a<=100000?{none:true,label:'עד 100,000 ₪ – אין עמלה'}:{rate:1.5,min:1000,max:10000,lo:100000,hi:Infinity,label:'מעל 100,000 ₪'};
+  const tL=a=>a<=7500?{fixed:50,label:'עד 7,500 ₪'}:a<=1e5?{rate:1.6,min:300,lo:7500,hi:1e5,label:'7,500 – 100,000 ₪'}:a<=650000?{rate:1.5,min:1600,lo:1e5,hi:650000,label:'100,000 – 650,000 ₪'}:a<=1e6?{rate:1.1,min:10000,lo:650000,hi:1e6,label:'650,000 ₪ – 1 מיליון'}:a<=5e6?{rate:.35,min:11000,lo:1e6,hi:5e6,label:'1 – 5 מיליון ₪'}:{rate:.25,min:17500,max:40000,lo:5e6,hi:Infinity,label:'מעל 5 מיליון ₪'};
+  const m=seg('lnM','all',draw);
+  let amt,disc;
+  amt=control('lnAmt',{vals:range([10000,1e6,10000],[1e6,5e6,50000],[5e6,2e7,250000]),init:500000,
+    presets:[100000,250000,500000,1000000,3000000],label:v=>short(v,'₪'),onChange:draw});
+  disc=discCtl('lnDisc',draw);
+  const cls=r=>r.bind==='min'||r.fixed?'minb':r.bind==='max'?'maxb':'';
+  function draw(){
+    if(!amt||!disc) return;
+    const a=amt.get(), d=disc.get()/100, M=m.get();
+    document.getElementById('lnCards').innerHTML=[['יחיד ועסק קטן',tR(a)],['עסק גדול',tL(a)]].map(([h,t])=>{
+      const x=fee(t,a,d,M); return card(h,block({amount:ILS(x.final),freq:['once','פעם אחת, בביצוע'],lines:feeLines(t,a,x,d,ILS)}));
+    }).join('');
+    document.querySelectorAll('#tab-loan .hd-disc').forEach(h=>h.textContent=d>0?`אחרי ${+(d*100).toFixed(2)}%`:'אחרי הטבה');
+    document.getElementById('lnRef').innerHTML=[100000,150000,200000,250000,300000,500000,750000,1000000,2000000,3000000].map(v=>{
+      const p=fee(tR(v),v,d,M),q=fee(tL(v),v,d,M);
+      return `<tr${v===a?' class="cur"':''}><th scope="row">${ILS(v)}</th><td class="${cls(p)}">${ILS(p.base)}</td><td>${ILS(p.final)}</td><td class="${cls(q)}">${ILS(q.base)}</td><td>${ILS(q.final)}</td></tr>`;
+    }).join('');
+  }
+  amt.init(); disc.init();
+})();
+
+/* ---------- credit lines ---------- */
+(()=>{
+  const H={rate:1.25,min:500,max:10000,lo:0,hi:Infinity};
+  const m=seg('liM','all',draw), un=document.getElementById('liUnused');
+  un.addEventListener('change',draw);
+  let amt,disc;
+  amt=control('liAmt',{vals:range([10000,1500000,10000]),init:500000,presets:[50000,100000,250000,500000,1000000,1500000],label:v=>short(v,'₪'),onChange:draw});
+  disc=discCtl('liDisc',draw);
+  function draw(){
+    if(!amt||!disc) return;
+    const a=amt.get(), d=disc.get()/100, M=m.get();
+    const handle=renew=>{const x=fee(H,a,d,M),L=feeLines(H,a,x,d,ILS);L.push({k:'בחידוש',v:renew});
+      return block({title:'טיפול במסגרת',amount:ILS(x.final),freq:['once','פעם אחת, בהעמדה'],lines:L})};
+    const alloc=rate=>{const q=a*rate/100,L=[{k:`<bdi dir="ltr">${ILS(a)} × ${rate}%</bdi>`,v:ILS(q)}];
+      if(d>0)L.push({k:`אחרי הטבה ${+(d*100).toFixed(2)}%`,v:ILS(q*(1-d))});
+      return block({title:'הקצאת אשראי',amount:ILS(q*(1-d)),per:'לרבעון',freq:['q','כל רבעון, מראש'],lines:L})};
+    const ind=card('יחיד',
+      block({title:'טיפול במסגרת',amount:ILS(0),note:'אין עמלה על מסגרת עו"ש ליחיד'})+
+      block({title:'הקצאת אשראי',amount:ILS(un.checked?12*(1-d):0),per:'לרבעון',freq:['q','כל רבעון, בסוף הרבעון'],
+        note:un.checked?'המסגרת לא נוצלה ברבעון':'המסגרת נוצלה – אין עמלה. סמנו "לא נוצלה" לחישוב 12 ₪.'}));
+    document.getElementById('liCards').innerHTML=ind+card('עסק קטן',handle('פטור אם אין שינוי בביטחונות')+alloc(.45))+card('עסק גדול',handle('פטור לא מצוין')+alloc(.565));
+    document.querySelectorAll('#tab-lines .hd-disc').forEach(h=>h.textContent=d>0?`אחרי ${+(d*100).toFixed(2)}%`:'אחרי הטבה');
+    document.getElementById('liRef').innerHTML=[50000,100000,150000,200000,250000,300000,500000,750000,1000000,1500000].map(v=>{
+      const h=fee(H,v,d,M), s=v*.0045, l=v*.00565, c=h.bind==='min'?'minb':h.bind==='max'?'maxb':'';
+      return `<tr${v===a?' class="cur"':''}><th scope="row">${ILS(v)}</th><td class="${c}">${ILS(h.base)}</td><td>${ILS(h.final)}</td><td>${ILS(s)}</td><td>${ILS(s*(1-d))}</td><td>${ILS(l)}</td><td>${ILS(l*(1-d))}</td></tr>`;
+    }).join('');
+  }
+  amt.init(); disc.init();
+})();
+})();
+
+
+
+
+
+(()=>{
+const btns=[...document.querySelectorAll('.tabs [data-tab]')];
+function show(k,push){
+  if(!document.getElementById('tab-'+k)) k='fees';
+  btns.forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===k));
+  document.querySelectorAll('.tabsec').forEach(s=>s.hidden=s.id!=='tab-'+k);
+  try{localStorage.setItem('tab',k)}catch(e){}
+  if(push){try{history.replaceState(null,'','#'+k)}catch(e){}}
+}
+btns.forEach(b=>b.addEventListener('click',()=>show(b.dataset.tab,true)));
+let start=(location.hash||'').slice(1);
+if(!start){try{start=localStorage.getItem('tab')||''}catch(e){}}
+show(start||'fees',false);
+})();
+</script>
+
+</body></html>
