@@ -65,10 +65,14 @@ td.v.diff{background:var(--diff);color:var(--diff-ink);font-weight:500}
 
 
 h2{font-family:var(--f-display);font-size:1.15rem;margin:0;color:var(--accent)}
-.tabs{display:flex;gap:4px;border-bottom:2px solid var(--line);overflow-x:auto}
-.tabs button{font:inherit;font-size:.95rem;background:none;border:0;border-bottom:3px solid transparent;margin-bottom:-2px;padding:8px 14px;color:var(--muted);cursor:pointer;white-space:nowrap}
-.tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent);font-weight:700}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.tabs button{font:inherit;font-size:1rem;font-weight:700;line-height:1.25;color:var(--ink);background:var(--paper);border:1.5px solid var(--line);border-radius:6px;padding:12px 6px;min-height:56px;display:flex;align-items:center;justify-content:center;text-align:center;cursor:pointer;white-space:normal}
+.tabs button:hover{border-color:var(--accent)}
+.tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--paper)}
 .tabsec{display:flex;flex-direction:column;gap:16px}
+.notes{border-top:1px solid var(--line);padding-top:14px;margin-top:4px}
+.nh{font-size:1rem;color:var(--muted)}
+.foot{color:var(--muted);font-size:.8rem;border-top:1px solid var(--line);padding-top:12px;max-width:80ch}
 .field{display:flex;flex-direction:column;gap:6px}
 .field>span{font-size:.8rem;color:var(--muted);letter-spacing:.02em}
 .inrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
@@ -196,9 +200,8 @@ td.maxb{background:var(--diff);color:var(--diff-ink)}
   .wrap{gap:12px;padding-block:12px 32px}
   h1{font-size:1.3rem}
   header .sub{font-size:.78rem;margin-top:2px}
-  .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;padding:3px;border:1px solid var(--line);border-radius:10px;background:var(--paper);overflow:visible}
-  .tabs button{border:0;margin:0;padding:7px 2px;border-radius:7px;font-size:.8rem;line-height:1.2;white-space:normal;text-align:center}
-  .tabs button[aria-selected="true"]{background:var(--accent);color:var(--paper);font-weight:700}
+  .tabs{gap:5px}
+  .tabs button{padding:8px 3px;min-height:52px;font-size:.88rem;border-radius:5px}
   .find{padding:8px 10px;gap:6px;border-radius:0;margin-inline:calc(-1 * max(16px, env(safe-area-inset-left, 0px)));border-inline:0}
   .find #q{font-size:1rem;padding:8px 10px}
   #cats{flex-wrap:nowrap;overflow-x:auto;gap:6px;scrollbar-width:none;margin-inline:-10px;padding-inline:10px;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
@@ -224,13 +227,12 @@ td.maxb{background:var(--diff);color:var(--diff-ink)}
 <div class="wrap" dir="rtl" lang="he">
   <header>
     <h1>עמלות לאומי: יחיד, עסק קטן, עסק גדול</h1>
-    <p class="sub">כל סעיפי התעריפונים הרשמיים המעודכנים ל-01/10/2026. ללא מע"מ, ללא הוצאות צד ג' (קורספונדנט, דואר, אגרות, בנק בחו"ל).</p>
   </header>
   <nav class="tabs" role="tablist" aria-label="אזורים">
     <button type="button" role="tab" data-tab="fees" aria-selected="true">כל העמלות</button>
     <button type="button" role="tab" data-tab="fx" aria-selected="false">מחשבון מט"ח</button>
-    <button type="button" role="tab" data-tab="loan" aria-selected="false">טיפול בהלוואה</button>
-    <button type="button" role="tab" data-tab="lines" aria-selected="false">מסגרת והקצאה</button>
+    <button type="button" role="tab" data-tab="loan" aria-selected="false">מחשבון הלוואה</button>
+    <button type="button" role="tab" data-tab="lines" aria-selected="false">מחשבון מסגרת</button>
   </nav>
   <section id="tab-fees" class="tabsec">
 
@@ -243,22 +245,20 @@ td.maxb{background:var(--diff);color:var(--diff-ink)}
     </div>
   </div>
 
-  <div class="bar">
-    <p class="note chnote"><b>פקיד</b> = סניף או מוקד מאויש · <b>ישיר</b> = אינטרנט, אפליקציה, כספומט, עמדות. יחיד ועסק קטן: מחיר אחיד לכל פעולה (פקיד 5.50 ₪, ישיר 1.65 ₪). עסק גדול: מחיר נפרד לכל פעולה + 1.65 ₪ רישום פעולה.</p>
-    <div class="legend">
-      <span><i class="sw" style="background:var(--same)"></i>תא ממוזג = אותו מחיר</span>
-      <span><i class="sw" style="background:var(--diff)"></i>עסק גדול שונה</span>
-      <span><b class="p">פ</b>בפיקוח בנק ישראל</span>
-      <span><b class="c">*</b>חושב מאחוז ההנחה שבתעריפון</span>
-    </div>
-  </div>
-
   <div class="tbl" id="feesTbl"><table id="t">
     <thead><tr><th>עמלה</th><th>יחיד</th><th>עסק קטן</th><th>עסק גדול</th></tr></thead>
     <tbody></tbody>
   </table><div class="empty" id="empty" hidden>אין עמלות שמתאימות לסינון. נקו את החיפוש או בחרו נושאים נוספים.</div></div>
 
   <div class="notes">
+    <h2 class="nh">הסברים והבהרות</h2>
+    <div class="legend">
+      <span><i class="sw" style="background:var(--same)"></i>תא ממוזג = אותו מחיר</span>
+      <span><i class="sw" style="background:var(--diff)"></i>עסק גדול שונה</span>
+      <span><b class="p">פ</b>בפיקוח בנק ישראל</span>
+      <span><b class="c">*</b>חושב מאחוז ההנחה שבתעריפון</span>
+    </div>
+    <p class="note"><b>פקיד</b> = סניף או מוקד מאויש · <b>ישיר</b> = אינטרנט, אפליקציה, כספומט, עמדות. יחיד ועסק קטן: מחיר אחיד לכל פעולה (פקיד 5.50 ₪, ישיר 1.65 ₪). עסק גדול: מחיר נפרד לכל פעולה + 1.65 ₪ רישום פעולה.</p>
     <div class="note"><b>פטור מעמלת טיפול בחידוש הלוואה</b>
       <ul>
         <li><b>יחיד ועסק קטן:</b> אין לגבות את העמלה בחידוש אשראי שאינו כרוך בשינוי או בהוספת ביטחונות. בהגדלת האשראי נגבית העמלה על ההפרש בלבד. אותו כלל חל על בקשה להלוואה לדיור.</li>
@@ -269,7 +269,8 @@ td.maxb{background:var(--diff);color:var(--diff-ink)}
     </div>
     <p class="note"><b>כיסוי אוטומטי במט"ח, לפי פעולה בפועל מ-11/10/26:</b> 33.16 אירו לפי שער יציג 3.4291 = 113.71 ₪. נוסף מרווח הפרשי שער 0.92% ועמלה 0.58%, יחד 1.5%, וסה"כ חויב 115.41 ₪ (= 113.71 × 1.015). כלומר 1.5% מעל השער היציג, כולל המרווח, וללא עמלת חליפין נוספת.</p>
     <p class="note"><b>רפורמה מ-1/7/2027 (יחיד ועסק קטן):</b> פעולות פקיד וערוץ ישיר והמסלולים יוחלפו ב"ניהול חשבון תשלום" — עד 10 ₪ לחודש ל-100 פעולות (עד 5 ₪ בחשבון עם עד 2 פעולות), עד 1 ₪ לכל פעולה נוספת. "טיפול בשטרות" יבוטל.</p>
-    <p class="note"><b>סיווג:</b> עוסק מורשה = יחיד בכל מחזור. חברה = עסק קטן רק עם דוח שנתי של עד 5 מיליון ₪ מחזור, או בשנה הראשונה להתאגדות.</p>
+    <p class="note"><b>סיווג:</b> עוסק מורשה = יחיד בכל מחזור. חברה = עסק קטן ככלל רק עם דוח שנתי של עד 5 מיליון ₪ מחזור, או בשנה הראשונה להתאגדות. יש חריגים שבהם תאגיד מסווג כעסק גדול למרות זאת, בין היתר בשל בעלות תאגידית או קרנות הון סיכון. ההגדרה המלאה בכללי העמלות (קישור במקורות).</p>
+    <p class="note"><b>טיפול במזומנים, יחיד ועסק קטן:</b> כשנגבית עמלת טיפול במזומנים (מעל 10,000 ₪ ביום), אין לגבות בנוסף עמלת פעולה על ידי פקיד. השורות בטבלה אינן מצטברות.</p>
     <p class="note">מקורות: <a href="https://www.bankleumi.co.il/static-files/Commissions_Leumi/AmlotYechidimL.pdf">תעריפון יחידים ועסקים קטנים</a> · <a href="https://www.bankleumi.co.il/static-files/Commissions_Leumi/AmlotTaagidimL.pdf">תעריפון עסקים גדולים</a> · <a href="https://boi.org.il/media/ideblefl/159a1.pdf">כללי העמלות, תיקון 2024</a> · <a href="https://www.boi.org.il/media/m4whhvkl/202616.pdf">דוח קביעת אסדרה 21/06/2026</a></p>
   </div>
   </section>
@@ -301,6 +302,7 @@ td.maxb{background:var(--diff);color:var(--diff-ink)}
     <ul>
       <li><b>יבוא טובין</b> מחויב לפי "יבוא ישיר" ולא בעמלת העברה. יבוא <b>שירותים</b> ותשלום לסוכן – לפי "העברה לחו"ל".</li>
       <li><b>תמורת יצוא</b> טובין או שירותים – לפי "יצוא ישיר". קבלה אחרת מחו"ל – לפי "קבלה מחו"ל".</li>
+      <li><b>המרה:</b> "כולל המרה" מוסיף את עמלת החליפין בלבד. עלות ההמרה בפועל תלויה גם בשער שהבנק מציע ובמרווח הגלום בו, שאינם כלולים בחישוב.</li>
       <li><b>לא כולל:</b> הוצאות קורספונדנט, הוצאות הבנק בחו"ל בהוראת OUR, ובעסק גדול 1.65 ₪ רישום פעולה. העברה נכנסת עם הערת OUR / PAY IN FULL פטורה.</li>
       <li>מחירי ערוץ ישיר לעסק גדול מחושבים מאחוז ההנחה שבתעריפון (10% בהעברה וביבוא, 20% בהמרה).</li>
     </ul>
@@ -383,7 +385,7 @@ td.maxb{background:var(--diff);color:var(--diff-ink)}
         <button class="chip" type="button" data-v="all">ההטבה גם על המינימום</button>
         <button class="chip" type="button" data-v="rate">המינימום נשמר</button>
       </div>
-      <label class="ck"><input type="checkbox" id="liUnused"> יחיד: המסגרת לא נוצלה ברבעון</label>
+      <div class="sl-top"><label class="flbl" for="liInt">יחיד: ריבית שנצברה ברבעון (₪)</label><input type="text" id="liInt" class="num" inputmode="decimal" autocomplete="off" value="0"></div>
     </div>
   </section>
   <div class="cards" id="liCards" aria-live="polite"></div>
@@ -428,7 +430,7 @@ td.maxb{background:var(--diff);color:var(--diff-ink)}
   </section>
   <div class="note"><b>שימו לב</b>
     <ul>
-      <li><b>הקצאת אשראי לעסק קטן וגדול</b> מחושבת על מלוא סכום המסגרת ונגבית מראש בתחילת כל רבעון. ליחיד – 12 ₪ קבוע, רק ברבעון ללא ניצול.</li>
+      <li><b>הקצאת אשראי לעסק קטן וגדול</b> מחושבת על מלוא סכום המסגרת ונגבית מראש בתחילת כל רבעון. ליחיד – 12 ₪ ברבעון ללא ניצול; בניצול חלקי נגבה הגבוה מבין הריבית שנצברה ברבעון לבין 12 ₪.</li>
       <li><b>עסק קטן מול גדול:</b> הטיפול זהה (1.25%); ההבדל בהקצאה – 0.45% מול 0.565% לרבעון.</li>
       <li><b>בחידוש:</b> לעסק קטן חידוש ללא שינוי ביטחונות פטור מעמלת טיפול; לעסק גדול התעריפון לא מציין פטור כזה.</li>
       <li>ריבית על הניצול אינה עמלה ואינה כלולה כאן.</li>
@@ -437,6 +439,7 @@ td.maxb{background:var(--diff);color:var(--diff-ink)}
   <p class="note">מקורות: <a href="https://www.bankleumi.co.il/static-files/Commissions_Leumi/AmlotYechidimL.pdf">תעריפון יחידים ועסקים קטנים, סעיפים 3(א)(1)–3(א)(2)</a> · <a href="https://www.bankleumi.co.il/static-files/Commissions_Leumi/AmlotTaagidimL.pdf">תעריפון עסקים גדולים, סעיפים 3.2.1, 3.3.2</a></p>
 </section>
 
+  <footer class="foot">ריכוז עמלות והשוואת תעריפים לפי התעריפונים הרשמיים המעודכנים ל-01/10/2026. התנאים מקוצרים וחלק מהסעיפים הושמטו (למשל חלק ממינימום העמלות בחוזים עתידיים), ולכן הנוסח המחייב הוא התעריפון. ללא מע"מ, ללא הוצאות צד ג' (קורספונדנט, דואר, אגרות, בנק בחו"ל).</footer>
 </div>
 
 <script>
@@ -451,9 +454,8 @@ const tw=(l1,v1,l2,v2,n)=>`<span class="ch w"><i>${l1}</i><span>${v1}</span></sp
 const cd=(v,p)=>`${v}${C}<span class="cn">מחושב · הנחה ${p}%</span>`;
 const G=[
  {k:'osh',n:'עו"ש',r:[
-  ['דמי ניהול חשבון','',"אין",null,"220 ₪ לרבעון"],
+  ['דמי ניהול / עמלת מינימום','עסק גדול: דמי ניהול · יחיד ועסק קטן: עמלת מינימום',"עד 5.50 ₪ לחודש"+s("עמלת מינימום · אין דמי ניהול"),null,"220 ₪ לרבעון"+s("דמי ניהול חשבון · אין עמלת מינימום")],
   ['רישום פעולה','נוסף לכל עמלה',"אין",null,"1.65 ₪ לפעולה"],
-  ['עמלת מינימום חודשית','',"עד 5.50 ₪",null,"אין (יש דמי ניהול)"],
   ['פעולה בעו"ש','מזומן, העברה, שיק, שובר, תדפיס',ch("5.50 ₪"+P,"1.65 ₪"+P),null,"אין מחיר אחיד"+s("כל פעולה מתומחרת לבד ועליה 1.65 ₪ רישום פעולה")],
   ['אזרח ותיק / אדם עם מוגבלות / ללא כרטיס','',"4 פעולות פקיד בחודש במחיר ערוץ ישיר",null,N],
   ['מסלול בסיסי','1 פקיד + 10 ישיר',"10 ₪ לחודש"+P,null,"לא קיים"],
@@ -462,9 +464,10 @@ const G=[
   ['משיכת מזומן','עד 10,000 ₪',ch("5.50 ₪","1.65 ₪"+s("כספומט: כל המשיכות ביום = פעולה אחת")),null,ch("5.50 ₪","לא מצוין","+ 1.65 ₪ רישום פעולה")],
   ['תשלום שובר','',ch("5.50 ₪","פטור"),null,ch("5.50 ₪","פטור","+ 1.65 ₪ רישום פעולה")],
   ['שאילתות / תדפיס','',ch("5.50 ₪","אינטרנט פטור · עמדות מהשביעית בחודש 1.65 ₪"),null,ch("5.50 ₪","גישה/גלישה ישירה פטור · מידע לאומי: דף חשבון מעל 6 בחודש 1.65 ₪, אחרות 2.30 ₪")],
-  ['הוראת קבע / הרשאה – חיוב','',ch("—","1.65 ₪"),null,"4.20 ₪ להעברה"+s("מינ' 25.20 ₪ להוראה · לא תלוי ערוץ")],
+  ['העברה בהוראת קבע','',ch("—","1.65 ₪"),null,"4.20 ₪ להעברה"+s("מינ' 25.20 ₪ להוראה · לא תלוי ערוץ · סעיף 1.5.4.1")],
+  ['חיוב בהרשאה','',ch("—","1.65 ₪"),null,"לא מתומחר בסעיף הוראת הקבע"+s("ראו מס\"ב בשירותים מיוחדים")],
   ['ביטול הרשאה / הוראת קבע','',"לפני 6 חיובים: עד 6 פעולות ישיר",null,"5 ₪"],
-  ['מזומן מעל 10,000 ₪','ביום עסקים',"0.15%",null,"0.22%"],
+  ['מזומן מעל 10,000 ₪','ביום עסקים',"0.15%"+s("במקום עמלת פקיד, לא בנוסף"),null,"0.22%"],
   ['מטבעות, לכל 100','',"2.40 ₪",null,"="],
   ['סגירת חשבון','סך פעולות הסגירה',"עד 40 ₪",null,N],
  ]},
@@ -559,7 +562,7 @@ const G=[
   ['תשלום לחו"ל – איזו עמלה חלה','בחרו לפי מטרת התשלום'],
   ['יבוא טובין – תשלום ישיר לספק','חשבון פתוח / טרנזיט · חלק 7 בתעריפון',ch("0.5% · מינ' $30"+mm(.5,30),"0.45% · מינ' $27"+mm(.45,27)),null,ch("0.5% · מינ' $30"+mm(.5,30),cd("0.45% · מינ' $27",10)+mm(.45,27))],
   ['יבוא שירותים / תשלום לסוכן','עמלת העברה רגילה לחו"ל',"כמו העברה לחו\"ל",null,"="],
-  ['העברה לחו"ל','בפועל מתבצעת רק בערוץ ישיר',ch("0.225% · $22.50–$150"+mm(.225,22.5,150,600),"0.2025% · $20.25–$135"+mm(.2025,20.25,135,600)),null,ch("0.225% · $22.50–$200"+mm(.225,22.5,200,200),cd("0.2025% · $20.25–$180",10)+mm(.2025,20.25,180,200))],
+  ['העברה לחו"ל','',ch("0.225% · $22.50–$150"+mm(.225,22.5,150,600),"0.2025% · $20.25–$135"+mm(.2025,20.25,135,600)),null,ch("0.225% · $22.50–$200"+mm(.225,22.5,200,200),cd("0.2025% · $20.25–$180",10)+mm(.2025,20.25,180,200))],
   ['העברה קטנה לחו"ל','יחיד/קטן עד $600 · גדול עד $200',ch("$10","$9"),null,ch("$10",cd("$9",10))],
   ['תוספת SWIFT להעברה יוצאת','',"לא נגבית",null,"$12 להודעה"+s("נוסף על העמלה ועל הקורספונדנט")],
   ['הוצאות OUR (המוטב לא משלם)','',"לפי חיוב הבנק בחו\"ל",null,"="],
@@ -605,15 +608,15 @@ const G=[
   ['חוזים עתידיים במעו"ף','',"0.25% משווי החוזה"+s("ריבית / אג\"ח שחר: 50 ₪ לחוזה"),null,"="],
   ['ק/מ ני"ע בחו"ל','',ch("0.9% · $25–$7,500","0.3% · $24–$6,750"),null,ch("עד $25 אלף 0.95% (מינ' $80) · מעל 0.9% (מינ' $260)","לאומי טרייד: 0.3% · מינ' $25")],
   ['אופציות בחו"ל','ליחידה',ch("5% · $7–$300","$2"),null,ch("5% · מינ' $7","לאומי טרייד: $2")],
-  ['דמי ניהול ני"ע בת"א','לרבעון',"0.15%"+s("מקס' 3,700 ₪ לני\"ע · 11,500 ₪ לפיקדון"),null,"0.15%"+s("מינ' 5.50 ₪ לני\"ע · 27 ₪ לפיקדון")],
-  ['דמי ניהול ני"ע בחו"ל','לרבעון',"0.2%"+s("מקס' 7,400 ₪ לני\"ע · 23,000 ₪ לפיקדון"),null,"0.2%"+s("מינ' 30 ₪ לני\"ע · 60 ₪ לפיקדון")],
-  ['ק/מ שלא בוצעה','',"25 ₪",null,"="],
+  ['דמי ניהול ני"ע בת"א','לרבעון',"0.15%"+s("מקס' 3,700 ₪ לני\"ע · 11,500 ₪ לפיקדון · פטור: מק\"מ וקרן כספית · שנה ראשונה בפיקדון שנפתח באפליקציה: עד 50% מהתעריף, בתנאים"),null,"0.15%"+s("מינ' 5.50 ₪ לני\"ע · 27 ₪ לפיקדון")],
+  ['דמי ניהול ני"ע בחו"ל','לרבעון',"0.2%"+s("מקס' 7,400 ₪ לני\"ע · 23,000 ₪ לפיקדון · שנה ראשונה בפיקדון שנפתח באפליקציה: עד 50% מהתעריף, בתנאים"),null,"0.2%"+s("מינ' 30 ₪ לני\"ע · 60 ₪ לפיקדון")],
+  ['ק/מ שלא בוצעה','',ch("25 ₪ · מק\"מ 20 ₪","פטור בשירותי ני\"ע שבנספח ה'"),null,"25 ₪"],
   ['העברת ני"ע לאותו לקוח בגוף אחר','',"5 ₪"+P,null,"="],
   ['העברת ני"ע ללקוח אחר','',"0.25%"+s("מינ' 27 ₪ · מקס' 850 ₪"),null,"0.25%"+s("מינ' 27 ₪")],
   ['המרת אג"ח / מימוש אופציות','',"0.4%"+s("מינ' 24 ₪"),null,"="],
   ['המרה בין נייר בארץ לבחו"ל','',"$45",null,"="],
-  ['הזמנה בהנפקה – אג"ח ממשלתיות','',"0.1%"+s("מינ' 27 ₪"),null,"0.5%"+s("מינ' 27 ₪")],
-  ['הזמנה בהנפקה – שאר ני"ע','',"0.05%"+s("מינ' 27 ₪"),null,"="],
+  ['הזמנה בהנפקה – אג"ח ממשלתיות','',ch("0.1% · מינ' 27 ₪","0.09% · מינ' 16 ₪","בכפוף לתנאים"),null,"0.5%"+s("מינ' 27 ₪")],
+  ['הזמנה בהנפקה – שאר ני"ע','',ch("0.05% · מינ' 27 ₪","0.045% · מינ' 16 ₪","בכפוף לתנאים"),null,"0.05%"+s("מינ' 27 ₪")],
   ['ריבית ודיבידנד','',N,null,"0.5%"+s("מינ' 8.50 ₪")],
   ['פדיון ני"ע','',"כמו ק/מ",null,"ישראלי 0.65%, מינ' 27 ₪"+s("זר 0.9%, מינ' $25")],
   ['עמלת הפצה בקרן נאמנות','',"סוג 1: 0.2% · סוג 3: 0.35% · סוג 4: 0.1%",null,"="],
@@ -629,7 +632,7 @@ const G=[
   ['תיקון בתנאי דוקומנטים לגבייה','',"$30",null,"="],
   ['אחסנה במחסני ערובה','',"0.25%"+s("מינ' $60"),null,"="],
   ['יבוא ישיר','חשבון פתוח / טרנזיט',ch("0.5% · מינ' $30"+mm(.5,30),"0.45% · מינ' $27"+mm(.45,27),"בעסק גדול הישיר מחושב מהנחה 10%"),null,"="],
-  ['הכנת מסמכים לעסקה מורכבת','',"0.1%"+s("מינ' $100 · מקס' $5,000 · חצי מוחזר אם בוצעה בלאומי"),null,"="],
+  ['הכנת מסמכים לעסקה מורכבת','',"0.1%"+s("מינ' $100 · מקס' $5,000 · חצי מוחזר אם בוצעה בלאומי, ובלבד שהחיוב אחרי ההחזר לא יפחת מהמינימום"),null,"="],
   ['יצוא'],
   ['משלוח דוקומנטים לגבייה','',"0.25%"+s("מינ' $50"),null,"="],
   ['כל תשלום דחוי מהשני ואילך','',"0.125%"+s("מינ' $35"),null,"="],
@@ -653,7 +656,7 @@ const G=[
  ]},
  {k:'lc',n:'אשראי דוקומנטרי',r:[
   ['פתיחת א"ד יבוא וניצול ראשון','לשנה',ch("5% · מינ' $195","4.5% · מינ' $175.50","בעסק גדול הישיר מחושב מהנחה 10%"),null,"="],
-  ['הגדלה / הארכת א"ד יבוא','לשנה',ch("5% · מינ' $75","4.5% · מינ' $67.50","בעסק גדול הישיר מחושב מהנחה 10%"),null,"="],
+  ['הגדלה / הארכת א"ד יבוא','לשנה · + עמלת שינוי בתנאי א"ד',ch("5% · מינ' $75","4.5% · מינ' $67.50","נגבית גם עמלת שינוי בתנאי א\"ד · בעסק גדול הישיר מחושב מהנחה 10%"),null,"="],
   ['טיפול בא"ד מקוים','',ch("0.15% · מינ' $60","0.135% · מינ' $54","בעסק גדול הישיר מחושב מהנחה 10%"),null,"="],
   ['ניצול נוסף במסגרת א"ד','מהמשלוח השני',"$50",null,"="],
   ['תיקון א"ד יבוא','',ch("$60","$54","בעסק גדול הישיר מחושב מהנחה 10%"),null,"="],
@@ -678,10 +681,10 @@ const G=[
   ['UNITED / INFINITE','לחודש',"31.90 / 400 ₪",null,"31.90 ₪ / "+N],
   ['FLYCARD / Premium Select / Premium','לחודש',"19.90 / 27.90 / 38.90 ₪",null,"="],
   ['דיינרס','לחודש',"15.30 ₪"+s("FLYCARD 19.90 · Premium 31.90 · FLYALL 17.90 · Premium 24.90"),null,"="],
-  ['עסקה במט"ח / משיכה בחו"ל','',"3%"+s("FIRST 2% · UNITED 1.5% (משיכה 2.55%)"),null,"="],
+  ['עסקה במט"ח / משיכה בחו"ל','',"3%"+s("FIRST 2% · UNITED 1.5% (משיכה 2.55%) · משיכה בדיינרס FLYCARD 2.6% · FLYCARD PREMIUM 2.55%"),null,"="],
   ['משיכה מחשבון באותו מטבע','',"19 ₪"+s("דיינרס 16 ₪"),null,"="],
   ['רכישת מט"ח מחלפן בכרטיס','',"$6",null,"="],
-  ['כרטיס חליפי','מיידי: 50 ₪',ch("30 ₪","15 ₪"),null,ch("30 ₪","15 ₪","לפי הפניה לנספח ה' של התעריפון הקמעונאי")],
+  ['כרטיס חליפי','מיידי: 50 ₪ · דיינרס מיידי: 40 ₪',ch("30 ₪","15 ₪"),null,ch("30 ₪","15 ₪","לפי הפניה לנספח ה' של התעריפון הקמעונאי")],
   ['הכחשה לא מוצדקת','',"15 ₪"+s("דיינרס 30 ₪"),null,"="],
   ['פירעון מוקדם של עסקאות','',"40 ₪"+s("דיינרס 30 ₪"),null,"="],
   ['דמי טעינה (נטען)','',ch("1.65 ₪","1 ₪ (הו\"ק ואינטרנט)"),null,"="],
@@ -700,7 +703,7 @@ const G=[
   ['ייעוץ פנסיוני חד-פעמי','לפי שווי נכסים',"1,500 / 2,000 / 3,000 ₪"+s("עד 1 מ' / עד 2 מ' / מעל"),null,N],
   ['חשבון חברה זרה','בפתיחה',N,null,"5,000 ₪"],
   ['חשבון נש"פ (נותן שירות פיננסי)','',N,null,"פתיחה 10,000 ₪"+s("חודשי: 13,000 / 17,000 / 22,000 ₪ לפי פעולות")],
-  ['חשבון נאמנות','לכל נהנה',N,null,"350 ₪ (עד 3) / 650 ₪"+s("שינוי נהנים 650 ₪")],
+  ['חשבון נאמנות','שאינה נש"פ, עם נהנה תאגיד שאינו עסק קטן · לכל נהנה',N,null,"350 ₪ (עד 3) / 650 ₪"+s("לא מחיר גורף לכל נאמנות · שינוי 650 ₪ לכל נהנה או בעלים שעודכן, הוסר או נוסף · סעיף 9.1.23")],
   ['קרן גידור','',N,null,"שותף 3,000 ₪ (מקס' 50,000)"+s("החזקה 0.025% לרבעון, מינ' 2,500 ₪")],
  ]},
 ];
@@ -870,7 +873,7 @@ const discCtl=(id,cb)=>control(id,{vals:range([0,100,5]),init:0,presets:[0,50,75
       if(cv.checked){const ct=conv(sg,c==='d'||!chRel),cx=fee(ct,a);total+=cx.final;
         lines.push({k:`המרה <bdi dir="ltr">${ct.rate}%</bdi>${cx.bind?' '+tag(cx.bind):''}`,v:USD(cx.final)});}
       if(sg==='l'&&chRel){total+=12;lines.push({k:'SWIFT',v:USD(12)});}
-      return card(sg==='r'?'יחיד ועסק קטן':'עסק גדול',block({amount:USD(total),freq:['once','בביצוע'],lines}));
+      return card(sg==='r'?'יחיד ועסק קטן':'עסק גדול',block({amount:USD(total),freq:['once','בביצוע'],lines,note:cv.checked?'כולל עמלת חליפין; אינו כולל את עלות מרווח שער ההמרה.':''}));
     });
     document.getElementById('fxCards').innerHTML=out.join('');
   }
@@ -905,8 +908,8 @@ const discCtl=(id,cb)=>control(id,{vals:range([0,100,5]),init:0,presets:[0,50,75
 /* ---------- credit lines ---------- */
 (()=>{
   const H={rate:1.25,min:500,max:10000,lo:0,hi:Infinity};
-  const m=seg('liM','all',draw), un=document.getElementById('liUnused');
-  un.addEventListener('change',draw);
+  const m=seg('liM','all',draw), ri=document.getElementById('liInt');
+  ri.addEventListener('input',draw);
   let amt,disc;
   amt=control('liAmt',{vals:range([10000,1500000,10000]),init:500000,presets:[50000,100000,250000,500000,1000000,1500000],label:v=>short(v,'₪'),onChange:draw});
   disc=discCtl('liDisc',draw);
@@ -920,8 +923,10 @@ const discCtl=(id,cb)=>control(id,{vals:range([0,100,5]),init:0,presets:[0,50,75
       return block({title:'הקצאת אשראי',amount:ILS(q*(1-d)),per:'לרבעון',freq:['q','כל רבעון, מראש'],lines:L})};
     const ind=card('יחיד',
       block({title:'טיפול במסגרת',amount:ILS(0),note:'אין עמלה על מסגרת עו"ש ליחיד'})+
-      block({title:'הקצאת אשראי',amount:ILS(un.checked?12*(1-d):0),per:'לרבעון',freq:['q','כל רבעון, בסוף הרבעון'],
-        note:un.checked?'המסגרת לא נוצלה ברבעון':'המסגרת נוצלה – אין עמלה. סמנו "לא נוצלה" לחישוב 12 ₪.'}));
+      (()=>{const it=num(ri.value),f=12*(1-d),tot=Math.max(it,f);
+        const L=[{k:'ריבית שנצברה ברבעון',v:ILS(it)},{k:'עמלת הקצאה'+(d>0?` אחרי הטבה ${+(d*100).toFixed(2)}%`:''),v:ILS(f)},{k:'נגבה הגבוה מביניהם',v:it>=f?'הריבית':'העמלה'}];
+        return block({title:'הקצאת אשראי',amount:ILS(tot),per:'לרבעון',freq:['q','כל רבעון, בסוף הרבעון'],lines:L,
+          note:it===0?'ללא ניצול ברבעון (ריבית 0) – העמלה 12 ₪. בניצול חלקי הזינו את הריבית שנצברה.':'ריבית או עמלה, הגבוה מביניהם.'})})());
     document.getElementById('liCards').innerHTML=ind+card('עסק קטן',handle('פטור אם אין שינוי בביטחונות')+alloc(.45))+card('עסק גדול',handle('פטור לא מצוין')+alloc(.565));
     document.querySelectorAll('#tab-lines .hd-disc').forEach(h=>h.textContent=d>0?`אחרי ${+(d*100).toFixed(2)}%`:'אחרי הטבה');
     document.getElementById('liRef').innerHTML=[50000,100000,150000,200000,250000,300000,500000,750000,1000000,1500000].map(v=>{
