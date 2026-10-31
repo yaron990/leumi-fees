@@ -721,7 +721,8 @@ function rowHtml(r){
   return `${tr}${name}${left}${cell(l,1,'diff','עסק גדול')}</tr>`;
 }
 const isDiff=r=>r.length>2 && r[4]!=='=';
-const text=r=>r.join(' ').replace(/<[^>]+>/g,' ');
+const normalizeSearch=value=>String(value).normalize('NFKC').toLowerCase().replace(/["'׳״‘’“”`]/g,'').replace(/\s+/g,' ').trim();
+const text=r=>normalizeSearch(r.join(' ').replace(/<[^>]+>/g,' '));
 
 // filter state: one topic at a time, or all
 let cur='all';
@@ -743,14 +744,14 @@ q.addEventListener('keydown',e=>{if(e.key==='Escape'){q.value='';render()}});
 document.addEventListener('keydown',e=>{if(e.key==='/'&&document.activeElement!==q&&!/INPUT|TEXTAREA/.test(document.activeElement.tagName)){e.preventDefault();document.querySelector('[data-tab=fees]').click();q.focus()}}); diffOnly.addEventListener('change',render);
 
 function render(){
-  const term=q.value.trim(), d=diffOnly.checked; let out='', n=0;
+  const term=normalizeSearch(q.value), d=diffOnly.checked; let out='', n=0;
   for(const g of G){
     if(!term && !on.has(g.k)) continue;
     let body='', pendingSub='';
     for(const r of g.r){
       if(r.length<=2){ pendingSub=rowHtml(r); continue; }
       if(d && !isDiff(r)) continue;
-      if(term && !text(r).includes(term) && !g.n.includes(term)) continue;
+      if(term && !text(r).includes(term) && !normalizeSearch(g.n).includes(term)) continue;
       body+=pendingSub+rowHtml(r); pendingSub=''; n++;
     }
     if(body) out+=`<tr class="grp"><th colspan="4">${g.n}</th></tr>`+body;
@@ -774,7 +775,7 @@ const short=(v,c)=>(c==='$'?'$':'')+(v>=1e6?(v/1e6)+'M':v>=1000?(v/1000)+'K':v);
 const tag=b=>b==='min'?'<span class="tag">נפל במינימום</span>':b==='max'?'<span class="tag">נפל במקסימום</span>':'';
 const range=(...segs)=>{const a=[];segs.forEach(([from,to,step])=>{for(let v=from;v<=to+1e-9;v+=step)if(!a.length||v>a[a.length-1])a.push(+v.toFixed(2))});return a};
 // slider + text box + preset chips, all in sync
-function control(id,{vals,init,presets,label,onChange}){
+function control(id,{vals,init,presets,label,onChange,min,max}){
   const inp=document.getElementById(id+'In'), rng=document.getElementById(id+'R'), pre=document.getElementById(id+'P');
   let val=init;
   const near=v=>{let b=0;vals.forEach((x,i)=>{if(Math.abs(x-v)<Math.abs(vals[b]-v))b=i});return b};
@@ -783,7 +784,14 @@ function control(id,{vals,init,presets,label,onChange}){
   const sync=(from)=>{ if(from!=='inp') inp.value=val.toLocaleString('en-US'); if(from!=='rng') rng.value=near(val);
     pre.querySelectorAll('[data-p]').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.p===val)); onChange(val); };
   rng.addEventListener('input',()=>{val=vals[+rng.value];sync('rng')});
-  inp.addEventListener('input',()=>{val=num(inp.value);sync('inp')});
+  inp.addEventListener('input',()=>{
+    if(min!=null||max!=null){
+      const parsed=Number(inp.value.replace(/,/g,'').trim());
+      val=Number.isFinite(parsed)?Math.min(max??Infinity,Math.max(min??-Infinity,parsed)):(min??0);
+      if(!Number.isFinite(parsed)||parsed!==val) inp.value=String(val);
+    }else val=num(inp.value);
+    sync('inp');
+  });
   inp.addEventListener('blur',()=>{inp.value=val.toLocaleString('en-US')});
   inp.addEventListener('focus',()=>{try{inp.select()}catch(e){}});
   pre.addEventListener('click',e=>{const b=e.target.closest('[data-p]');if(!b)return;val=+b.dataset.p;sync()});
@@ -797,6 +805,7 @@ function seg(id,init,onChange){
 }
 // percentage fee with min/max, discount d, method 'all' | 'rate'
 function fee(t,a,d=0,m='all'){
+  d=Number.isFinite(d)?Math.min(1,Math.max(0,d)):0;
   if(!t||t.none) return {base:0,final:0,bind:''};
   if(t.fixed!=null) return {base:t.fixed,final:m==='all'?t.fixed*(1-d):t.fixed,bind:'',fixed:true};
   const raw=a*t.rate/100; let base=raw,bind='';
@@ -836,7 +845,7 @@ function feeLines(t,a,x,d,C){
   const th=thrText(t,C); if(th) L.push({k:th,v:'',th:1});
   return L;
 }
-const discCtl=(id,cb)=>control(id,{vals:range([0,100,5]),init:0,presets:[0,50,75,90],label:v=>v+'%',onChange:cb});
+const discCtl=(id,cb)=>control(id,{vals:range([0,100,5]),init:0,presets:[0,50,75,90],label:v=>v+'%',onChange:cb,min:0,max:100});
 
 /* ---------- FX ---------- */
 (()=>{
