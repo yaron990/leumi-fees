@@ -7,15 +7,18 @@
 :root{
   --bg:#f6f7f9; --paper:#ffffff; --ink:#18202b; --muted:#5d6878; --line:#dde2e9;
   --accent:#1f4f8f; --same:#eef2f8; --diff:#fff3df; --diff-ink:#7a4a00; --sup:#0f6b4f; --calc:#6a3fa0;
+  --out:#b0530c; --out-bg:#fdf0e3; --in:#0f6b4f; --in-bg:#e5f3ec;
   --f-display:"Frank Ruhl Libre", "David", serif;
   --f-body:"IBM Plex Sans Hebrew", "Arial Hebrew", "Segoe UI", sans-serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#11161d; --paper:#18202a; --ink:#e7ecf2; --muted:#9aa6b6; --line:#2b3542;
-  --accent:#8db6ee; --same:#1d2836; --diff:#3a2c12; --diff-ink:#f3c97a; --sup:#6fd3ad; --calc:#c9a8f2; color-scheme:dark}}
+  --accent:#8db6ee; --same:#1d2836; --diff:#3a2c12; --diff-ink:#f3c97a; --sup:#6fd3ad; --calc:#c9a8f2;
+  --out:#f0a35a; --out-bg:#3a2816; --in:#6fd3ad; --in-bg:#123229; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#11161d; --paper:#18202a; --ink:#e7ecf2; --muted:#9aa6b6; --line:#2b3542;
-  --accent:#8db6ee; --same:#1d2836; --diff:#3a2c12; --diff-ink:#f3c97a; --sup:#6fd3ad; --calc:#c9a8f2; color-scheme:dark}
+  --accent:#8db6ee; --same:#1d2836; --diff:#3a2c12; --diff-ink:#f3c97a; --sup:#6fd3ad; --calc:#c9a8f2;
+  --out:#f0a35a; --out-bg:#3a2816; --in:#6fd3ad; --in-bg:#123229; color-scheme:dark}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
 .wrap{max-width:1040px;margin:0 auto;padding-block:24px 48px;
   padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));
@@ -65,7 +68,7 @@ td.v.diff{background:var(--diff);color:var(--diff-ink);font-weight:500}
 
 
 h2{font-family:var(--f-display);font-size:1.15rem;margin:0;color:var(--accent)}
-.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
 .tabs button{font:inherit;font-size:1rem;font-weight:700;line-height:1.25;color:var(--ink);background:var(--paper);border:1.5px solid var(--line);border-radius:6px;padding:12px 6px;min-height:56px;display:flex;align-items:center;justify-content:center;text-align:center;cursor:pointer;white-space:normal}
 .tabs button:hover{border-color:var(--accent)}
 .tabs button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--paper)}
@@ -141,12 +144,38 @@ small.mm{display:block;font-size:.76rem;color:var(--accent);font-weight:500;marg
 .seg-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
 .seg-grid .chip{border-radius:8px;padding:8px 6px;text-align:center}
 .seg .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--paper)}
-.fxres .big{font-size:2.2rem}
 
-#fxPre{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
-#fxPre .chip{padding:5px 0;text-align:center;font-size:.8rem}
-.fxres{border:2px solid var(--accent)}
-#tab-fx .sl-top input.num{width:auto;flex:1;max-width:none}
+/* money direction: out = amber, in = green */
+.dir{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.dir .chip{border-radius:8px;border-width:1.5px;padding:10px 8px;display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--ink);font-size:1rem;font-weight:700;background:var(--paper)}
+.dir .chip small{font-size:.76rem;font-weight:400;color:var(--muted)}
+.dir .chip .ar{font-size:1.1rem;line-height:1}
+.dir .chip[data-v="out"] .ar{color:var(--out)}
+.dir .chip[data-v="in"] .ar{color:var(--in)}
+.dir .chip[data-v="out"][aria-pressed="true"]{background:var(--out);border-color:var(--out);color:var(--paper)}
+.dir .chip[data-v="in"][aria-pressed="true"]{background:var(--in);border-color:var(--in);color:var(--paper)}
+.dir .chip[aria-pressed="true"] small,.dir .chip[aria-pressed="true"] .ar{color:inherit;opacity:.9}
+.nat{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+#fxNat .chip{border-radius:8px;padding:8px 10px;text-align:right;display:flex;flex-direction:column;gap:2px;color:var(--ink);background:var(--paper);font-weight:500}
+#fxNat .chip small{font-size:.76rem;font-weight:400;color:var(--muted)}
+#fxNat[data-dir="out"] .chip[aria-pressed="true"]{background:var(--out-bg);border-color:var(--out);box-shadow:inset 0 0 0 1px var(--out);color:var(--ink)}
+#fxNat[data-dir="in"] .chip[aria-pressed="true"]{background:var(--in-bg);border-color:var(--in);box-shadow:inset 0 0 0 1px var(--in);color:var(--ink)}
+.info{border:1px solid var(--line);border-inline-start:5px solid var(--out);border-radius:8px;padding:12px 14px;background:var(--bg);display:flex;flex-direction:column;gap:10px;font-size:.9rem}
+.info.in{border-inline-start-color:var(--in)}
+.info h3{margin:0;font-size:1.05rem;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+.info .dpill{font-size:.74rem;font-weight:700;padding:1px 9px;border-radius:999px;color:var(--paper);background:var(--out)}
+.info.in .dpill{background:var(--in)}
+.info p{margin:0}
+.info .cols{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px}
+.info .ih{font-size:.78rem;color:var(--muted);font-weight:500;letter-spacing:.02em;margin-bottom:2px}
+.info ul{margin:0;padding-inline-start:18px}
+.info .no li::marker{content:"✕  ";color:var(--diff-ink)}
+.info .yes li::marker{content:"✓  ";color:var(--sup)}
+.info table.ctab{min-width:0;background:var(--paper)}
+.info table.ctab td{white-space:normal}
+.tl{font-size:.78rem;color:var(--muted)}
+.cmp{font-size:.85rem;color:var(--muted);border-top:1px dashed var(--line);padding-top:6px}
+.cmp b{color:var(--ink);font-weight:500}
 
 .calc{gap:14px}
 .flbl{font-size:.82rem;color:var(--muted);font-weight:500;letter-spacing:.02em}
@@ -201,7 +230,11 @@ td.maxb{background:var(--diff);color:var(--diff-ink)}
   h1{font-size:1.3rem}
   header .sub{font-size:.78rem;margin-top:2px}
   .tabs{gap:5px}
-  .tabs button{padding:8px 3px;min-height:52px;font-size:.88rem;border-radius:5px}
+  .tabs button{padding:8px 3px;min-height:52px;font-size:.84rem;border-radius:5px}
+  .tabs .tw{display:none}
+  .nat{grid-template-columns:1fr}
+  .info .cols{grid-template-columns:1fr}
+  .dir .chip{font-size:.92rem}
   .find{padding:8px 10px;gap:6px;border-radius:0;margin-inline:calc(-1 * max(16px, env(safe-area-inset-left, 0px)));border-inline:0}
   .find #q{font-size:1rem;padding:8px 10px}
   #cats{flex-wrap:nowrap;overflow-x:auto;gap:6px;scrollbar-width:none;margin-inline:-10px;padding-inline:10px;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
@@ -230,9 +263,10 @@ td.maxb{background:var(--diff);color:var(--diff-ink)}
   </header>
   <nav class="tabs" role="tablist" aria-label="אזורים">
     <button type="button" role="tab" data-tab="fees" aria-selected="true">כל העמלות</button>
-    <button type="button" role="tab" data-tab="fx" aria-selected="false">מחשבון מט"ח</button>
-    <button type="button" role="tab" data-tab="loan" aria-selected="false">מחשבון הלוואה</button>
-    <button type="button" role="tab" data-tab="lines" aria-selected="false">מחשבון מסגרת</button>
+    <button type="button" role="tab" data-tab="fx" aria-selected="false"><span><span class="tw">מחשבון </span>העברות מט"ח</span></button>
+    <button type="button" role="tab" data-tab="conv" aria-selected="false"><span><span class="tw">מחשבון </span>המרת מט"ח</span></button>
+    <button type="button" role="tab" data-tab="loan" aria-selected="false"><span><span class="tw">מחשבון </span>הלוואה</span></button>
+    <button type="button" role="tab" data-tab="lines" aria-selected="false"><span><span class="tw">מחשבון </span>מסגרת</span></button>
   </nav>
   <section id="tab-fees" class="tabsec">
 
@@ -275,38 +309,144 @@ td.maxb{background:var(--diff);color:var(--diff-ink)}
   </div>
   </section>
 <section id="tab-fx" class="tabsec" hidden>
-  <section class="panel calc" aria-label="מחשבון עמלות מט&quot;ח">
-    <div class="field"><span class="flbl">סוג הפעולה</span>
-      <div class="seg seg-grid" id="fxOp">
-        <button class="chip" type="button" data-v="out">העברה לחו"ל</button>
-        <button class="chip" type="button" data-v="imp">יבוא – תשלום לספק</button>
-        <button class="chip" type="button" data-v="in">קבלה מחו"ל</button>
-        <button class="chip" type="button" data-v="exp">תמורת יצוא</button>
+  <section class="panel calc" aria-label="מחשבון העברות מט&quot;ח לחו&quot;ל ומחו&quot;ל">
+    <div class="field"><span class="flbl">כיוון הכסף</span>
+      <div class="seg dir" id="fxDir">
+        <button class="chip" type="button" data-v="out"><span><span class="ar" aria-hidden="true">↑</span> הוצאת כספים לחו"ל</span><small>אני משלם או מעביר לחו"ל</small></button>
+        <button class="chip" type="button" data-v="in"><span><span class="ar" aria-hidden="true">↓</span> קבלת כספים מחו"ל</span><small>כסף מחו"ל נכנס לחשבון שלי</small></button>
       </div>
     </div>
+    <div class="field"><span class="flbl">מהות ההעברה</span>
+      <div class="seg nat" id="fxNat"></div>
+    </div>
+    <div class="info" id="fxInfo"></div>
     <div class="amt">
       <div class="sl-top"><label class="flbl" for="fxAmtIn">סכום ($)</label><input type="text" id="fxAmtIn" class="num" inputmode="decimal" autocomplete="off"></div>
       <input type="range" id="fxAmtR" aria-label="סכום – סליידר">
       <div class="presets" id="fxAmtP"></div>
     </div>
+    <div class="amt">
+      <div class="sl-top"><label class="flbl" for="fxDiscIn">הטבה (%)</label><input type="text" id="fxDiscIn" class="num" inputmode="decimal" autocomplete="off"></div>
+      <input type="range" id="fxDiscR" aria-label="הטבה – סליידר">
+      <div class="presets" id="fxDiscP"></div>
+    </div>
     <div class="opts">
-      <div class="seg seg-grid two" id="fxCh">
-        <button class="chip" type="button" data-v="d">ערוץ ישיר</button>
-        <button class="chip" type="button" data-v="t">פקיד</button>
+      <div class="field" id="fxChF"><span class="flbl">ערוץ</span>
+        <div class="seg seg-grid" id="fxCh">
+          <button class="chip" type="button" data-v="d">ערוץ ישיר</button>
+          <button class="chip" type="button" data-v="t">פקיד</button>
+        </div>
       </div>
-      <label class="ck"><input type="checkbox" id="fxConv"> כולל המרה משקלים / לשקלים</label>
+      <div class="field"><span class="flbl">אופן החלת ההטבה</span>
+        <div class="seg seg-grid" id="fxM">
+          <button class="chip" type="button" data-v="all">ההטבה גם על המינימום</button>
+          <button class="chip" type="button" data-v="rate">המינימום נשמר</button>
+        </div>
+      </div>
+      <label class="ck"><input type="checkbox" id="fxConv"> <span id="fxConvL">כולל המרה משקלים</span></label>
     </div>
   </section>
   <div class="cards" id="fxCards" aria-live="polite"></div>
+  <section class="panel">
+    <h2>מתי העמלה נופלת במינימום ובמקסימום</h2>
+    <p class="note" id="fxThrN"></p>
+    <div class="tbl"><table class="ctab thr">
+      <thead><tr><th>סוג לקוח</th><th>מדרגת סכום</th><th>שיעור</th><th>נפל במינימום</th><th>נפל במקסימום</th></tr></thead>
+      <tbody id="fxThr"></tbody>
+    </table></div>
+  </section>
+  <section class="panel">
+    <h2>טבלת עזר</h2>
+    <p class="note">עמלת ההעברה בלבד, לפי המהות והערוץ שנבחרו; ללא SWIFT וללא המרה. "אחרי הטבה" לפי ההטבה שנבחרה.</p>
+    <div class="legend"><span><i class="sw" style="background:var(--same)"></i>נפל במינימום</span><span><i class="sw" style="background:var(--diff)"></i>נפל במקסימום</span></div>
+    <div class="tbl"><table class="ctab">
+      <thead>
+        <tr><th rowspan="2">סכום</th><th colspan="2">יחיד ועסק קטן</th><th colspan="2">עסק גדול</th></tr>
+        <tr><th>תעריף מלא</th><th class="hd-disc">אחרי הטבה</th><th>תעריף מלא</th><th class="hd-disc">אחרי הטבה</th></tr>
+      </thead>
+      <tbody id="fxRef"></tbody>
+    </table></div>
+  </section>
   <div class="note"><b>שימו לב</b>
     <ul>
-      <li><b>יבוא טובין</b> מחויב לפי "יבוא ישיר" ולא בעמלת העברה. יבוא <b>שירותים</b> ותשלום לסוכן – לפי "העברה לחו"ל".</li>
-      <li><b>תמורת יצוא</b> טובין או שירותים – לפי "יצוא ישיר". קבלה אחרת מחו"ל – לפי "קבלה מחו"ל".</li>
-      <li><b>המרה:</b> "כולל המרה" מוסיף את עמלת החליפין בלבד. עלות ההמרה בפועל תלויה גם בשער שהבנק מציע ובמרווח הגלום בו, שאינם כלולים בחישוב.</li>
-      <li><b>לא כולל:</b> הוצאות קורספונדנט, הוצאות הבנק בחו"ל בהוראת OUR, ובעסק גדול 1.65 ₪ רישום פעולה. העברה נכנסת עם הערת OUR / PAY IN FULL פטורה.</li>
-      <li>מחירי ערוץ ישיר לעסק גדול מחושבים מאחוז ההנחה שבתעריפון (10% בהעברה וביבוא, 20% בהמרה).</li>
+      <li><b>הסיווג קובע את העמלה, לא הערוץ:</b> תשלום לספק על טובין = "יבוא ישיר" (0.5%, מינ' $30, ללא מקסימום); שירותים ותשלום לסוכן = העברה רגילה לחו"ל (עם מקסימום). בקבלה: תמורת יצוא = "יצוא ישיר", כל השאר = "קבלה מחו"ל".</li>
+      <li><b>המרה:</b> "כולל המרה" מוסיף את עמלת החליפין בתעריף מלא (הוצאה – לפי הערוץ שנבחר, קבלה – ערוץ ישיר). להטבה בהמרה, ולהמרת מט"ח-מט"ח, השתמשו ב"מחשבון המרת מט"ח". עלות מרווח השער אינה כלולה.</li>
+      <li><b>לא כולל:</b> הוצאות קורספונדנט, הוצאות הבנק בחו"ל בהוראת OUR, ובעסק גדול 1.65 ₪ רישום פעולה.</li>
+      <li>מחירי ערוץ ישיר לעסק גדול מחושבים מאחוז ההנחה שבתעריפון (10% בהעברה וביבוא) ומסומנים <b class="c">*</b>.</li>
     </ul>
   </div>
+  <p class="note">מקורות: <a href="https://www.bankleumi.co.il/static-files/Commissions_Leumi/AmlotYechidimL.pdf">תעריפון יחידים ועסקים קטנים, פרק מט"ח וחלק 7 (סחר חוץ)</a> · <a href="https://www.bankleumi.co.il/static-files/Commissions_Leumi/AmlotTaagidimL.pdf">תעריפון עסקים גדולים, פרק מט"ח וסחר חוץ</a></p>
+</section>
+<section id="tab-conv" class="tabsec" hidden>
+  <section class="panel calc" aria-label="מחשבון המרת מט&quot;ח">
+    <div class="field"><span class="flbl">סוג ההמרה</span>
+      <div class="seg seg-grid" id="cvT">
+        <button class="chip" type="button" data-v="ss">שקל ↔ מט"ח</button>
+        <button class="chip" type="button" data-v="ff">מט"ח ↔ מט"ח</button>
+      </div>
+    </div>
+    <div class="amt">
+      <div class="sl-top"><label class="flbl" for="cvAmtIn">סכום ההמרה ($)</label><input type="text" id="cvAmtIn" class="num" inputmode="decimal" autocomplete="off"></div>
+      <input type="range" id="cvAmtR" aria-label="סכום ההמרה – סליידר">
+      <div class="presets" id="cvAmtP"></div>
+    </div>
+    <div class="amt">
+      <div class="sl-top"><label class="flbl" for="cvDiscIn">הטבה (%)</label><input type="text" id="cvDiscIn" class="num" inputmode="decimal" autocomplete="off"></div>
+      <input type="range" id="cvDiscR" aria-label="הטבה – סליידר">
+      <div class="presets" id="cvDiscP"></div>
+    </div>
+    <div class="opts">
+      <div class="field"><span class="flbl">ערוץ</span>
+        <div class="seg seg-grid" id="cvCh">
+          <button class="chip" type="button" data-v="d">ערוץ ישיר</button>
+          <button class="chip" type="button" data-v="t">פקיד</button>
+        </div>
+      </div>
+      <div class="field"><span class="flbl">מועד ההמרה</span>
+        <div class="seg seg-grid" id="cvDay">
+          <button class="chip" type="button" data-v="reg">יום מסחר רגיל</button>
+          <button class="chip" type="button" data-v="no">יום ללא מסחר (בד"כ יום א')</button>
+        </div>
+      </div>
+      <div class="field"><span class="flbl">אופן החלת ההטבה</span>
+        <div class="seg seg-grid" id="cvM">
+          <button class="chip" type="button" data-v="all">ההטבה גם על המינימום</button>
+          <button class="chip" type="button" data-v="rate">המינימום נשמר</button>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div class="cards" id="cvCards" aria-live="polite"></div>
+  <section class="panel">
+    <h2>מתי העמלה נופלת במינימום ובמקסימום</h2>
+    <p class="note">לפי סוג ההמרה, הערוץ והמועד שנבחרו, בתעריף מלא.</p>
+    <div class="tbl"><table class="ctab thr">
+      <thead><tr><th>סוג לקוח</th><th>מדרגת סכום</th><th>שיעור</th><th>נפל במינימום</th><th>נפל במקסימום</th></tr></thead>
+      <tbody id="cvThr"></tbody>
+    </table></div>
+  </section>
+  <section class="panel">
+    <h2>טבלת עזר</h2>
+    <p class="note">עמלת החליפין בלבד, ללא מרווח השער. "אחרי הטבה" לפי ההטבה שנבחרה.</p>
+    <div class="legend"><span><i class="sw" style="background:var(--same)"></i>נפל במינימום</span><span><i class="sw" style="background:var(--diff)"></i>נפל במקסימום</span></div>
+    <div class="tbl"><table class="ctab">
+      <thead>
+        <tr><th rowspan="2">סכום ההמרה</th><th colspan="2">יחיד ועסק קטן</th><th colspan="2">עסק גדול</th></tr>
+        <tr><th>תעריף מלא</th><th class="hd-disc">אחרי הטבה</th><th>תעריף מלא</th><th class="hd-disc">אחרי הטבה</th></tr>
+      </thead>
+      <tbody id="cvRef"></tbody>
+    </table></div>
+  </section>
+  <div class="note"><b>שימו לב</b>
+    <ul>
+      <li><b>עמלת חליפין</b> נגבית בכל פעולה שיש בה המרה, בנוסף לעמלת הפעולה עצמה (העברה, יבוא, יצוא וכו').</li>
+      <li><b>מרווח השער לא כלול:</b> עלות ההמרה בפועל כוללת גם את ההפרש בין השער שהבנק נותן לשער היציג. בכיסוי אוטומטי של יתרת חובה במט"ח (יחיד ועסק קטן) נגבים 1.5% מעל השער היציג, כולל המרווח.</li>
+      <li><b>יום ללא מסחר במט"ח</b> (בד"כ יום א', לפי "שער יציג ידוע"): לעסק גדול 2%, מינ' $7.20 (מט"ח-מט"ח 4%, מינ' $14.40), ללא מקסימום. בתעריפון יחידים ועסקים קטנים אין תעריף נפרד.</li>
+      <li><b>פטורים ליחיד:</b> המרה מפמ"ח פיצויים, פנסיה מחבר העמים ורנטות; משיכה בכספומט"ח פטורה מחליפין (לעסק גדול $7.20).</li>
+      <li>מחירי ערוץ ישיר לעסק גדול מחושבים מהנחת 20% שבתעריפון ומסומנים <b class="c">*</b>.</li>
+    </ul>
+  </div>
+  <p class="note">מקורות: <a href="https://www.bankleumi.co.il/static-files/Commissions_Leumi/AmlotYechidimL.pdf">תעריפון יחידים ועסקים קטנים, פרק מט"ח – עמלת חליפין</a> · <a href="https://www.bankleumi.co.il/static-files/Commissions_Leumi/AmlotTaagidimL.pdf">תעריפון עסקים גדולים, פרק מט"ח – עמלת חליפין</a></p>
 </section>
 <section id="tab-loan" class="tabsec" hidden>
   <section class="panel calc" aria-label="מחשבון עמלת טיפול בהלוואה">
@@ -323,9 +463,11 @@ td.maxb{background:var(--diff);color:var(--diff-ink)}
     <div class="opts">
       <label class="ck"><input type="checkbox" id="lnDigital"> יחיד ועסק קטן: "אשראי בקליק" / "הלוואת דיגיטל"</label>
       <p class="note">הפטור חל על ההלוואות הדיגיטליות המפורטות בנספח ה׳; בחירה זו אינה משנה את חישוב העסק הגדול.</p>
-      <div class="seg seg-grid two" id="lnM">
-        <button class="chip" type="button" data-v="all">ההטבה גם על המינימום</button>
-        <button class="chip" type="button" data-v="rate">המינימום נשמר</button>
+      <div class="field"><span class="flbl">אופן החלת ההטבה</span>
+        <div class="seg seg-grid" id="lnM">
+          <button class="chip" type="button" data-v="all">ההטבה גם על המינימום</button>
+          <button class="chip" type="button" data-v="rate">המינימום נשמר</button>
+        </div>
       </div>
     </div>
   </section>
@@ -384,9 +526,11 @@ td.maxb{background:var(--diff);color:var(--diff-ink)}
       <div class="presets" id="liDiscP"></div>
     </div>
     <div class="opts">
-      <div class="seg seg-grid two" id="liM">
-        <button class="chip" type="button" data-v="all">ההטבה גם על המינימום</button>
-        <button class="chip" type="button" data-v="rate">המינימום נשמר</button>
+      <div class="field"><span class="flbl">אופן החלת ההטבה</span>
+        <div class="seg seg-grid" id="liM">
+          <button class="chip" type="button" data-v="all">ההטבה גם על המינימום</button>
+          <button class="chip" type="button" data-v="rate">המינימום נשמר</button>
+        </div>
       </div>
       <div class="sl-top"><label class="flbl" for="liInt">יחיד: ריבית שנצברה ברבעון (₪)</label><input type="text" id="liInt" class="num" inputmode="decimal" autocomplete="off" value="0"></div>
     </div>
@@ -852,46 +996,158 @@ function feeLines(t,a,x,d,C){
 }
 const discCtl=(id,cb)=>control(id,{vals:range([0,100,5]),init:0,presets:[0,50,75,90],label:v=>v+'%',onChange:cb,min:0,max:100});
 
-/* ---------- FX ---------- */
+/* ---------- FX shared: tier lists ---------- */
+const I=Infinity, T=(lo,hi,o)=>({lo,hi,...o}), STAR='<b class="c">*</b>';
+const SEGS=[['r','יחיד ועסק קטן'],['l','עסק גדול']];
+const pick=(list,a)=>list.find(t=>a<=t.hi)||list[list.length-1];
+const tierLbl=(t,C)=>t.lo===0&&t.hi===I?'כל סכום':t.lo===0?`עד ${C(t.hi)}`:t.hi===I?`מעל ${C(t.lo)}`:`${C(t.lo)} – ${C(t.hi)}`;
+const desc=(t,C)=>t.none?'פטור':t.fixed!=null?C(t.fixed)+(t.calc?STAR:''):`${t.rate}%${t.min!=null?` · מינ' ${C(t.min)}`:''}${t.max!=null?` · מקס' ${C(t.max)}`:' · ללא מקסימום'}${t.calc?STAR:''}`;
+const withLbl=(list,t,C,extra='')=>({...t,label:(list.length>1?tierLbl(t,C):'')+(t.calc?(list.length>1?' · ':'')+'מחושב מאחוז ההנחה':'')+extra});
+function thrRows(groups,C){
+  return groups.map(([h,list])=>list.map(t=>{
+    if(t.none) return `<tr><th scope="row">${h}</th><td>כל סכום</td><td>פטור</td><td>—</td><td>—</td></tr>`;
+    if(t.fixed!=null) return `<tr><th scope="row">${h}</th><td>${tierLbl(t,C)}</td><td>${C(t.fixed)} קבוע${t.calc?STAR:''}</td><td>—</td><td>—</td></tr>`;
+    const r=t.rate/100; let mn='אין מינימום',mx='אין מקסימום',mc='',xc='';
+    if(t.min!=null){const x=t.min/r; if(x<=t.lo) mn='אף פעם'; else {mn=`${t.lo>0?'מ-'+C(t.lo)+' ':''}עד ${C(Math.min(x,t.hi))}`;mc='minb'}}
+    if(t.max!=null){const y=t.max/r; if(y>=t.hi) mx='אף פעם'; else {mx=`מ-${C(Math.max(y,t.lo))}`;xc='maxb'}}
+    return `<tr><th scope="row">${h}</th><td>${tierLbl(t,C)}</td><td>${desc(t,C)}</td><td class="${mc}">${mn}</td><td class="${xc}">${mx}</td></tr>`;
+  }).join('')).join('');
+}
+function refRows(vals,a,listFor,d,M,C){
+  const cls=x=>x.fixed?'':x.bind==='min'?'minb':x.bind==='max'?'maxb':'';
+  return vals.map(v=>`<tr${v===a?' class="cur"':''}><th scope="row">${C(v)}</th>${SEGS.map(([sg])=>{const x=fee(pick(listFor(sg),v),v,d,M);return `<td class="${cls(x)}">${C(x.base)}</td><td>${C(x.final)}</td>`}).join('')}</tr>`).join('');
+}
+const discHd=(tab,d)=>document.querySelectorAll(`#${tab} .hd-disc`).forEach(h=>h.textContent=d>0?`אחרי ${+(d*100).toFixed(2)}%`:'אחרי הטבה');
+const pct=(f,a)=>a>0?`${+(f/a*100).toFixed(3)}%`:'—';
+// exchange (conversion) fee tiers
+function convList(sg,type,c,day){
+  const d=c==='d';
+  if(sg==='l'&&day==='no') return [T(0,I,type==='ss'?{rate:2,min:7.2}:{rate:4,min:14.4})];
+  if(sg==='r') return [T(0,I,type==='ss'?(d?{rate:.16,min:5.76,max:2400}:{rate:.2,min:7.2,max:3000}):(d?{rate:.24,min:8,max:2400}:{rate:.3,min:10,max:3000}))];
+  return [T(0,I,type==='ss'?(d?{rate:.176,min:5.76,max:2400,calc:1}:{rate:.22,min:7.2,max:3000}):(d?{rate:.352,min:11.52,max:4800,calc:1}:{rate:.44,min:14.4,max:6000}))];
+}
+
+/* ---------- FX transfers ---------- */
 (()=>{
-  const P=(rate,min,max,label,lo,hi)=>({rate,min,max,label,lo,hi});
-  const flat=(v,label)=>({fixed:v,label});
-  function rule(op,seg,ch,a){
-    const d=ch==='d';
-    if(op==='out'){
-      if(seg==='r') return a<=600?flat(d?9:10,'עד $600'):(d?P(.2025,20.25,135,'מעל $600 · ישיר',600):P(.225,22.5,150,'מעל $600 · פקיד',600));
-      return a<=200?flat(d?9:10,'עד $200'):(d?P(.2025,20.25,180,'מעל $200 · ישיר (מחושב)',200):P(.225,22.5,200,'מעל $200 · פקיד',200));
-    }
-    if(op==='in'){
-      if(seg==='r') return a<=600?flat(10,'עד $600'):P(.225,22.5,150,'מעל $600',600);
-      return a<=200?flat(10,'עד $200'):P(.225,22.5,200,'מעל $200',200);
-    }
-    if(op==='imp') return d?P(.45,27,null,'יבוא ישיר · ישיר'+(seg==='l'?' (מחושב)':''),0):P(.5,30,null,'יבוא ישיר · פקיד',0);
-    return a<=200?flat(8,'עד $200'):P(.15,20,200,'מעל $200',200);
+  const OUTG={r:{t:[T(0,600,{fixed:10}),T(600,I,{rate:.225,min:22.5,max:150})],d:[T(0,600,{fixed:9}),T(600,I,{rate:.2025,min:20.25,max:135})]},
+              l:{t:[T(0,200,{fixed:10}),T(200,I,{rate:.225,min:22.5,max:200})],d:[T(0,200,{fixed:9,calc:1}),T(200,I,{rate:.2025,min:20.25,max:180,calc:1})]}};
+  const IMP={r:{t:[T(0,I,{rate:.5,min:30})],d:[T(0,I,{rate:.45,min:27})]},l:{t:[T(0,I,{rate:.5,min:30})],d:[T(0,I,{rate:.45,min:27,calc:1})]}};
+  const EXP=[T(0,200,{fixed:8}),T(200,I,{rate:.15,min:20,max:200})];
+  const ING={r:[T(0,600,{fixed:10}),T(600,I,{rate:.225,min:22.5,max:150})],l:[T(0,200,{fixed:10}),T(200,I,{rate:.225,min:22.5,max:200})]};
+  const tiers=(k,sg,c)=>k==='gen'||k==='svc'?OUTG[sg][c]:k==='imp'?IMP[sg][c]:k==='exp'?EXP:k==='ing'?ING[sg]:[T(0,I,{none:true})];
+  const OUT_EXTRA=['עסק גדול: הודעת SWIFT $12 לכל העברה יוצאת (נכלל בחישוב)','הוצאות קורספונדנט; בהוראת OUR (המוטב לא משלם) – גם הוצאות הבנק בחו"ל לפי חיובו','עסק גדול: 1.65 ₪ רישום פעולה','בהעברה משקלים – גם עמלת חליפין (סמנו "כולל המרה")'];
+  const IN_EXTRA=['עסק גדול: 1.65 ₪ רישום פעולה','בהמרה לשקלים – גם עמלת חליפין (סמנו "כולל המרה")'];
+  const NAT=[
+   {k:'gen',dir:'out',n:'העברה פרטית / כללית',s:'לחשבון שלי או של אחר, משפחה, השקעה',item:'העברה לחו"ל',cmp:'imp',
+    what:'כל העברה יוצאת שאינה תשלום לספק על טובין (סחורה). מחויבת בעמלת "העברה לחו"ל": סכום קטן – עמלה קבועה, מעליו אחוז עם מינימום ומקסימום.',
+    ex:['העברה לחשבון שלי או של בן משפחה בחו"ל','מתנה, תמיכה, שכר לימוד, שכירות','העברה להשקעה או לרכישת נכס בחו"ל'],
+    no:['תשלום לספק על סחורה שיובאה – בחרו "יבוא טובין"','תשלום על שירות או לסוכן – אותה עמלה, אך עדיף לסווג "יבוא שירותים"'],extra:OUT_EXTRA},
+   {k:'svc',dir:'out',n:'יבוא שירותים / תשלום לסוכן',s:'תשלום לספק שירות או לסוכן בחו"ל',item:'העברה לחו"ל',cmp:'imp',
+    what:'תשלום עבור שירות שניתן מחו"ל, או עמלה לסוכן. לפי התעריפון מחויב כהעברה רגילה לחו"ל ולא כ"יבוא ישיר" – כלומר עם מקסימום לעמלה.',
+    ex:['ייעוץ, פיתוח, עיצוב, פרסום','מנויי תוכנה ושירותי ענן','עמלת סוכן או מתווך בחו"ל'],
+    no:['תשלום על הסחורה עצמה – בחרו "יבוא טובין"'],extra:OUT_EXTRA},
+   {k:'imp',dir:'out',n:'יבוא טובין – תשלום ישיר לספק',s:'סחורה · חשבון פתוח / טרנזיט',item:'יבוא ישיר',cmp:'svc',
+    what:'תשלום ישיר לספק בחו"ל על טובין, בחשבון פתוח או בעסקת טרנזיט, שלא באמצעות דוקומנטים לגבייה או אשראי דוקומנטרי. מחויב לפי "יבוא ישיר" (סחר חוץ, חלק 7) – אחוז עם מינימום וללא מקסימום, ולכן בסכומים גדולים יקר בהרבה מהעברה רגילה.',
+    ex:['תשלום לספק על משלוח סחורה','עסקת טרנזיט – סחורה שנקנית בחו"ל'],
+    no:['שירותים, תוכנה או עמלת סוכן – בחרו "יבוא שירותים"','תשלום דרך דוקומנטים לגבייה או אשראי דוקומנטרי – עמלות נפרדות בלשונית "כל העמלות" (סחר חוץ / אשראי דוקומנטרי)'],extra:OUT_EXTRA},
+   {k:'exp',dir:'in',n:'תמורת יצוא טובין או שירותים',s:'תשלום מלקוח בחו"ל על מכירה',item:'יצוא ישיר – זיכוי תמורות',cmp:'ing',
+    what:'זיכוי תמורה מלקוח בחו"ל על טובין או שירותים שמכרתם. מחויב לפי "יצוא ישיר – זיכוי תמורות" (סחר חוץ, חלק 7). התעריף זהה ליחיד, לעסק קטן ולעסק גדול.',
+    ex:['תשלום מלקוח בחו"ל על סחורה שנשלחה','תשלום על שירות שסופק ללקוח בחו"ל (פיתוח, ייעוץ, עיצוב)'],
+    no:['משכורת כשכיר, מתנה, החזר או העברה מחשבון שלי – בחרו "קבלה אחרת"','גבייה בדוקומנטים או באשראי דוקומנטרי – עמלות נפרדות'],
+    extra:['הערת BEN: היצואן משלם את הוצאות הבנק בחו"ל',...IN_EXTRA]},
+   {k:'ing',dir:'in',n:'קבלה אחרת מחו"ל',s:'משכורת, מתנה, החזר, מחשבון שלי',item:'קבלת העברה מחו"ל',cmp:'exp',
+    what:'כל העברה נכנסת שאינה תמורת יצוא ואינה פטורה. סכום קטן – עמלה קבועה, מעליו אחוז עם מינימום ומקסימום.',
+    ex:['משכורת כשכיר ממעסיק בחו"ל','מתנה או תמיכה ממשפחה','העברה מחשבון שלי בחו"ל, פדיון השקעה, ירושה'],
+    no:['תשלום על סחורה או שירות שמכרתם – בחרו "תמורת יצוא"','ההעברה נשלחה עם הערת OUR / PAY IN FULL – בחרו "פטורה"'],extra:IN_EXTRA},
+   {k:'free',dir:'in',n:'העברה נכנסת פטורה',s:'OUR / PAY IN FULL ומקרים מיוחדים',item:'פטור מעמלת קבלה',cmp:'ing',
+    what:'העברה נכנסת שפטורה מעמלת קבלה. הפטור תלוי בהוראת ההעברה או במקור הכסף – ודאו שההערה מופיעה בהוראה שנשלחה מחו"ל.',
+    freeBy:{r:['עם הערת OUR / PAY IN FULL','מגביית שיק או בנקנוט','רנטות לנפגעי הנאצים','פנסיה מחבר העמים'],l:['עם הערת OUR / PAY IN FULL','מגביית שיק או בנקנוט','תושב חוץ שמעביר מחשבונו להשקעה בבנק']},
+    no:['אין הערת OUR / PAY IN FULL בהוראה – העמלה לפי "קבלה אחרת" או "תמורת יצוא"'],extra:IN_EXTRA},
+  ];
+  const byK=k=>NAT.find(n=>n.k===k);
+  let dir='out'; const natSel={out:'gen',in:'exp'};
+  try{const v=JSON.parse(localStorage.getItem('fxSel')||'null'); if(v&&(v.dir==='out'||v.dir==='in')){dir=v.dir; if(byK(v.out))natSel.out=v.out; if(byK(v.in))natSel.in=v.in;}}catch(e){}
+  const dirEl=document.getElementById('fxDir'), natEl=document.getElementById('fxNat'), info=document.getElementById('fxInfo');
+  const save=()=>{try{localStorage.setItem('fxSel',JSON.stringify({dir,...natSel}))}catch(e){}};
+  function markDir(){dirEl.querySelectorAll('[data-v]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===dir))}
+  function renderNat(){
+    natEl.dataset.dir=dir;
+    natEl.innerHTML=NAT.filter(n=>n.dir===dir).map(n=>`<button class="chip" type="button" data-v="${n.k}" aria-pressed="${natSel[dir]===n.k}"><span>${n.n}</span><small>${n.s}</small></button>`).join('');
   }
-  const conv=(seg,d)=>seg==='r'?(d?P(.16,5.76,2400,'',0):P(.2,7.2,3000,'',0)):(d?P(.176,5.76,2400,'',0):P(.22,7.2,3000,'',0));
-  const names={out:'העברה לחו"ל',imp:'יבוא ישיר',in:'קבלה מחו"ל',exp:'יצוא ישיר'};
-  const op=seg('fxOp','out',draw), ch=seg('fxCh','d',draw), cv=document.getElementById('fxConv');
+  dirEl.addEventListener('click',e=>{const b=e.target.closest('[data-v]');if(!b)return;dir=b.dataset.v;markDir();renderNat();save();draw()});
+  natEl.addEventListener('click',e=>{const b=e.target.closest('[data-v]');if(!b)return;natSel[dir]=b.dataset.v;renderNat();save();draw()});
+  const ch=seg('fxCh','d',draw), m=seg('fxM','all',draw), cv=document.getElementById('fxConv');
   cv.addEventListener('change',draw);
-  const amt=control('fxAmt',{vals:range([100,1000,50],[1000,20000,250],[20000,200000,2500],[200000,2000000,25000]),init:10000,
-    presets:[1000,5000,10000,50000,100000],label:v=>short(v,'$'),onChange:draw});
-  function draw(){
-    if(!amt) return;
-    const a=amt.get(), o=op.get(), chRel=o==='out'||o==='imp';
-    document.getElementById('fxCh').hidden=!chRel;
-    const c=chRel?ch.get():'t';
-    const out=['r','l'].map(sg=>{
-      const t=rule(o,sg,c,a), x=fee(t,a);
-      let total=x.final; const lines=feeLines(t,a,x,0,USD);
-      lines.unshift({k:names[o],v:USD(x.final)});
-      if(cv.checked){const ct=conv(sg,c==='d'||!chRel),cx=fee(ct,a);total+=cx.final;
-        lines.push({k:`המרה <bdi dir="ltr">${ct.rate}%</bdi>${cx.bind?' '+tag(cx.bind):''}`,v:USD(cx.final)});}
-      if(sg==='l'&&chRel){total+=12;lines.push({k:'SWIFT',v:USD(12)});}
-      return card(sg==='r'?'יחיד ועסק קטן':'עסק גדול',block({amount:USD(total),freq:['once','בביצוע'],lines,note:cv.checked?'כולל עמלת חליפין; אינו כולל את עלות מרווח שער ההמרה.':''}));
-    });
-    document.getElementById('fxCards').innerHTML=out.join('');
+  let amt,disc;
+  amt=control('fxAmt',{vals:range([100,1000,50],[1000,20000,250],[20000,200000,2500],[200000,2000000,25000]),init:10000,
+    presets:[500,1000,5000,10000,50000,100000],label:v=>short(v,'$'),onChange:draw});
+  disc=discCtl('fxDisc',draw);
+  const li=a=>a.map(x=>`<li>${x}</li>`).join('');
+  function infoHtml(n,c){
+    const out=n.dir==='out';
+    const cols=out?[['t','פקיד'],['d','ערוץ ישיר']]:[['t','כל הערוצים']];
+    const rows=SEGS.map(([sg,h])=>`<tr><th scope="row">${h}</th>${n.freeBy?`<td colspan="${cols.length}">פטור כאשר: ${n.freeBy[sg].join(' · ')}</td>`:
+      cols.map(([cc])=>{const L=tiers(n.k,sg,cc);return `<td${out&&cc===c?' style="font-weight:500"':''}>${L.map(t=>(L.length>1?`<span class="tl">${tierLbl(t,USD)}:</span> `:'')+desc(t,USD)).join('<br>')}</td>`}).join('')}</tr>`).join('');
+    return `<h3><span class="dpill">${out?'↑ הוצאה לחו"ל':'↓ קבלה מחו"ל'}</span>${n.n}</h3>
+      <p>${n.what}</p>
+      <div class="cols">
+        <div><div class="ih">מתאים ל־</div><ul class="yes">${li(n.ex||n.freeBy.r.concat(n.freeBy.l.filter(x=>!n.freeBy.r.includes(x))))}</ul></div>
+        <div><div class="ih">לא מתאים אם</div><ul class="no">${li(n.no)}</ul></div>
+      </div>
+      <div><div class="ih">העמלה בתעריפון: "${n.item}"</div>
+        <div class="tbl"><table class="ctab"><thead><tr><th>לקוח</th>${cols.map(([,h])=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table></div></div>
+      <div><div class="ih">נוסף על העמלה / לא כלול</div><ul>${li(n.extra)}</ul></div>`;
   }
-  amt.init();
+  function draw(){
+    if(!amt||!disc) return;
+    const a=amt.get(), d=disc.get()/100, M=m.get(), n=byK(natSel[dir]), out=dir==='out';
+    document.getElementById('fxChF').hidden=!out;
+    document.getElementById('fxConvL').textContent=out?'כולל המרה משקלים':'כולל המרה לשקלים';
+    const c=out?ch.get():'t';
+    info.className='info '+dir; info.innerHTML=infoHtml(n,c);
+    const alt=byK(n.cmp);
+    document.getElementById('fxCards').innerHTML=SEGS.map(([sg,h])=>{
+      const list=tiers(n.k,sg,c), t=withLbl(list,pick(list,a),USD), x=fee(t,a,d,M);
+      const lines=n.freeBy?[{k:'פטור כאשר',v:''},...n.freeBy[sg].map(f=>({k:f,v:'',th:1}))]:[{k:n.item,v:''},...feeLines(t,a,x,d,USD)];
+      let total=x.final;
+      if(sg==='l'&&out){total+=12;lines.push({k:'SWIFT',v:USD(12)})}
+      if(cv.checked){const ct=pick(convList(sg,'ss',out?c:'d','reg'),a),cx=fee(ct,a);total+=cx.final;
+        lines.push({k:`המרה <bdi dir="ltr">${ct.rate}%</bdi> (תעריף מלא${out?'':', ישיר'})${cx.bind?' '+tag(cx.bind):''}`,v:USD(cx.final)})}
+      if(!n.freeBy) lines.push({k:'סה"כ מתוך הסכום',v:pct(total,a)});
+      const al=tiers(alt.k,sg,c), ax=fee(pick(al,a),a,d,M);
+      const note=`<div class="cmp">לבדיקת הסיווג: אילו סווג כ"<b>${alt.n}</b>" – עמלה ${USD(ax.final)} במקום ${USD(x.final)}.</div>`;
+      return card(h,block({amount:USD(total),freq:['once','פעם אחת, בביצוע'],lines})+note);
+    }).join('');
+    document.getElementById('fxThrN').textContent=`לפי "${n.n}"${out?`, ${c==='d'?'ערוץ ישיר':'פקיד'}`:''}, בתעריף מלא. מתחת לסכום המדרגה – עמלה קבועה.`;
+    document.getElementById('fxThr').innerHTML=thrRows(SEGS.map(([sg,h])=>[h,tiers(n.k,sg,c)]),USD);
+    discHd('tab-fx',d);
+    document.getElementById('fxRef').innerHTML=refRows([200,500,600,1000,5000,10000,20000,50000,100000,500000],a,sg=>tiers(n.k,sg,c),d,M,USD);
+  }
+  markDir(); renderNat(); amt.init(); disc.init();
+})();
+
+/* ---------- FX conversion ---------- */
+(()=>{
+  const ty=seg('cvT','ss',draw), ch=seg('cvCh','d',draw), day=seg('cvDay','reg',draw), m=seg('cvM','all',draw);
+  let amt,disc;
+  amt=control('cvAmt',{vals:range([100,1000,50],[1000,20000,250],[20000,200000,2500],[200000,2000000,25000],[2000000,5000000,100000]),init:10000,
+    presets:[1000,5000,10000,100000,1000000],label:v=>short(v,'$'),onChange:draw});
+  disc=discCtl('cvDisc',draw);
+  function draw(){
+    if(!amt||!disc) return;
+    const a=amt.get(), d=disc.get()/100, M=m.get(), T2=ty.get(), c=ch.get(), D=day.get();
+    const lst=sg=>convList(sg,T2,c,D);
+    document.getElementById('cvCards').innerHTML=SEGS.map(([sg,h])=>{
+      const L=lst(sg), t=withLbl(L,pick(L,a),USD,sg==='l'&&D==='no'?'יום ללא מסחר · כל הערוצים':''), x=fee(t,a,d,M);
+      const lines=[{k:T2==='ss'?'חליפין שקל ↔ מט"ח':'חליפין מט"ח ↔ מט"ח',v:''},...feeLines(t,a,x,d,USD),{k:'שיעור אפקטיבי',v:pct(x.final,a)}];
+      const note=sg==='r'&&D==='no'?'בתעריפון יחידים ועסקים קטנים אין תעריף נפרד ליום ללא מסחר; מוצג התעריף הרגיל.':'';
+      return card(h,block({amount:USD(x.final),freq:['once','פעם אחת, בכל המרה'],lines,note}));
+    }).join('');
+    document.getElementById('cvThr').innerHTML=thrRows(SEGS.map(([sg,h])=>[h,lst(sg)]),USD);
+    discHd('tab-conv',d);
+    document.getElementById('cvRef').innerHTML=refRows([1000,3000,5000,10000,50000,100000,500000,1000000,2000000,5000000],a,lst,d,M,USD);
+  }
+  amt.init(); disc.init();
 })();
 
 /* ---------- loans ---------- */
