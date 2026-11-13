@@ -255,16 +255,53 @@ td.maxb{background:var(--diff);color:var(--diff-ink)}
   .panel{padding:10px 12px}
   .big{font-size:1.5rem}
 }
+
+/* customer-type picker: one choice drives the fee table and highlights calculator cards */
+.hd{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px}
+.who{display:flex;align-items:center;gap:4px;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:4px}
+.who-l{font-size:.8rem;color:var(--muted);padding-inline:6px 4px}
+.who button{font:inherit;font-size:.92rem;font-weight:500;border:0;background:none;color:var(--ink);padding:7px 14px;border-radius:7px;cursor:pointer;white-space:nowrap}
+.who button:hover{background:var(--bg)}
+.who button[aria-checked="true"]{background:var(--accent);color:var(--paper)}
+html:not([data-seg="all"]) .cmp-only,html[data-seg="l"] .not-l,html[data-seg="s"] .only-i,html[data-seg="l"] .only-i{display:none!important}
+.tn{display:none}
+#t.one{min-width:0}
+#t.one thead th:first-child{width:50%}
+#t.one td.v.one{font-weight:500}
+#t mark{background:var(--diff);color:inherit;border-radius:2px;padding:0 1px}
+.cards .card{transition:opacity .15s}
+html:not([data-seg="all"]) .cards .card{opacity:.55}
+html:not([data-seg="all"]) .cards .card:hover{opacity:.9}
+html[data-seg="i"] .cards .card[data-seg~="i"],html[data-seg="s"] .cards .card[data-seg~="s"],html[data-seg="l"] .cards .card[data-seg~="l"]{opacity:1;order:-1;border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+html[data-seg="i"] .card[data-seg~="i"] h2::after,html[data-seg="s"] .card[data-seg~="s"] h2::after,html[data-seg="l"] .card[data-seg~="l"] h2::after{content:"שלך";font-family:var(--f-body);font-size:.72rem;font-weight:700;color:var(--paper);background:var(--accent);border-radius:999px;padding:1px 9px;margin-inline-start:8px;vertical-align:3px}
+@media (max-width:640px){
+  .hd{gap:8px}
+  .who{width:100%;display:grid;grid-template-columns:repeat(4,1fr);padding:3px}
+  .who-l{display:none}
+  .who button{padding:8px 2px;font-size:.88rem}
+  .tabs button{min-height:44px;padding:6px 2px;font-size:.88rem;white-space:nowrap}
+  .tabs .tn{display:inline}
+  #t.one td.v.one{display:block;font-size:1rem}
+  #t.one td.v.one::before{content:none}
+  #t.one td.name{font-size:.9rem}
+}
 </style>
 
 <div class="wrap" dir="rtl" lang="he">
-  <header>
-    <h1>עמלות לאומי: יחיד, עסק קטן, עסק גדול</h1>
+  <header class="hd">
+    <h1>עמלות לאומי</h1>
+    <div class="who" id="who" role="radiogroup" aria-label="הצג עמלות עבור">
+      <span class="who-l">הצג עבור</span>
+      <button type="button" role="radio" data-s="i">יחיד</button>
+      <button type="button" role="radio" data-s="s">עסק קטן</button>
+      <button type="button" role="radio" data-s="l">עסק גדול</button>
+      <button type="button" role="radio" data-s="all">השוואה</button>
+    </div>
   </header>
   <nav class="tabs" role="tablist" aria-label="אזורים">
-    <button type="button" role="tab" data-tab="fees" aria-selected="true">כל העמלות</button>
-    <button type="button" role="tab" data-tab="fx" aria-selected="false"><span><span class="tw">מחשבון </span>העברות מט"ח</span></button>
-    <button type="button" role="tab" data-tab="conv" aria-selected="false"><span><span class="tw">מחשבון </span>המרת מט"ח</span></button>
+    <button type="button" role="tab" data-tab="fees" aria-selected="true"><span><span class="tw">כל </span>העמלות</span></button>
+    <button type="button" role="tab" data-tab="fx" aria-selected="false"><span><span class="tw">מחשבון </span>העברות<span class="tw"> מט"ח</span></span></button>
+    <button type="button" role="tab" data-tab="conv" aria-selected="false"><span><span class="tw">מחשבון </span>המר<span class="tw">ת מט"ח</span><span class="tn">ה</span></span></button>
     <button type="button" role="tab" data-tab="loan" aria-selected="false"><span><span class="tw">מחשבון </span>הלוואה</span></button>
     <button type="button" role="tab" data-tab="lines" aria-selected="false"><span><span class="tw">מחשבון </span>מסגרת</span></button>
   </nav>
@@ -274,7 +311,7 @@ td.maxb{background:var(--diff);color:var(--diff-ink)}
     <input type="search" id="q" placeholder="חפשו עמלה: ערבות, זה&quot;ב, שיק, חליפין…" aria-label="חיפוש עמלה" autocomplete="off">
     <div class="row" id="cats"></div>
     <div class="row">
-      <label class="ck"><input type="checkbox" id="diffOnly"> רק מה שעסק גדול משלם אחרת</label>
+      <label class="ck cmp-only"><input type="checkbox" id="diffOnly"> רק מה שעסק גדול משלם אחרת</label>
       <span class="count" id="count"></span>
     </div>
   </div>
@@ -287,8 +324,8 @@ td.maxb{background:var(--diff);color:var(--diff-ink)}
   <div class="notes">
     <h2 class="nh">הסברים והבהרות</h2>
     <div class="legend">
-      <span><i class="sw" style="background:var(--same)"></i>תא ממוזג = אותו מחיר</span>
-      <span><i class="sw" style="background:var(--diff)"></i>עסק גדול שונה</span>
+      <span class="cmp-only"><i class="sw" style="background:var(--same)"></i>תא ממוזג = אותו מחיר</span>
+      <span class="cmp-only"><i class="sw" style="background:var(--diff)"></i>עסק גדול שונה</span>
       <span><b class="p">פ</b>בפיקוח בנק ישראל</span>
       <span><b class="c">*</b>חושב מאחוז ההנחה שבתעריפון</span>
     </div>
@@ -461,8 +498,8 @@ td.maxb{background:var(--diff);color:var(--diff-ink)}
       <div class="presets" id="lnDiscP"></div>
     </div>
     <div class="opts">
-      <label class="ck"><input type="checkbox" id="lnDigital"> יחיד ועסק קטן: "אשראי בקליק" / "הלוואת דיגיטל"</label>
-      <p class="note">הפטור חל על ההלוואות הדיגיטליות המפורטות בנספח ה׳; בחירה זו אינה משנה את חישוב העסק הגדול.</p>
+      <label class="ck not-l"><input type="checkbox" id="lnDigital"> יחיד ועסק קטן: "אשראי בקליק" / "הלוואת דיגיטל"</label>
+      <p class="note not-l">הפטור חל על ההלוואות הדיגיטליות המפורטות בנספח ה׳; בחירה זו אינה משנה את חישוב העסק הגדול.</p>
       <div class="field"><span class="flbl">אופן החלת ההטבה</span>
         <div class="seg seg-grid" id="lnM">
           <button class="chip" type="button" data-v="all">ההטבה גם על המינימום</button>
@@ -532,7 +569,7 @@ td.maxb{background:var(--diff);color:var(--diff-ink)}
           <button class="chip" type="button" data-v="rate">המינימום נשמר</button>
         </div>
       </div>
-      <div class="sl-top"><label class="flbl" for="liInt">יחיד: ריבית שנצברה ברבעון (₪)</label><input type="text" id="liInt" class="num" inputmode="decimal" autocomplete="off" value="0"></div>
+      <div class="sl-top only-i"><label class="flbl" for="liInt">יחיד: ריבית שנצברה ברבעון (₪)</label><input type="text" id="liInt" class="num" inputmode="decimal" autocomplete="off" value="0"></div>
     </div>
   </section>
   <div class="cards" id="liCards" aria-live="polite"></div>
@@ -589,6 +626,19 @@ td.maxb{background:var(--diff);color:var(--diff-ink)}
   <footer class="foot">ריכוז עמלות והשוואת תעריפים לפי התעריפונים הרשמיים המעודכנים ל-01/10/2026. התנאים מקוצרים וחלק מהסעיפים הושמטו (למשל חלק ממינימום העמלות בחוזים עתידיים), ולכן הנוסח המחייב הוא התעריפון. ללא מע"מ, ללא הוצאות צד ג' (קורספונדנט, דואר, אגרות, בנק בחו"ל).</footer>
 </div>
 
+<script>
+// customer type: 'all' (compare) | 'i' | 's' | 'l' — stored per viewer
+const SEGN={i:'יחיד',s:'עסק קטן',l:'עסק גדול'};
+let SEG='all';
+try{const v=localStorage.getItem('seg'); if(v&&(v==='all'||SEGN[v])) SEG=v;}catch(e){}
+document.documentElement.dataset.seg=SEG;
+(()=>{const w=document.getElementById('who');
+  const mark=()=>w.querySelectorAll('[data-s]').forEach(b=>b.setAttribute('aria-checked',b.dataset.s===SEG));
+  mark();
+  w.addEventListener('click',e=>{const b=e.target.closest('[data-s]');if(!b)return;SEG=b.dataset.s;document.documentElement.dataset.seg=SEG;mark();
+    try{localStorage.setItem('seg',SEG)}catch(e){} document.dispatchEvent(new Event('segchange'))});
+})();
+</script>
 <script>
 // Row: [name, sub, individual, small, large, kind]
 // small null = same as individual; large "=" same for all, "=s" same as small; kind "tier" = indented; a row of [title, sub] alone = sub-heading
@@ -859,11 +909,18 @@ const G=[
 
 const tb=document.querySelector('#t tbody'), tbl=document.getElementById('t');
 const cell=(html,span,cls,lab)=>`<td class="v ${cls}" data-l="${lab}" ${span>1?`colspan="${span}"`:''} tabindex="0"><span class="t">${html}</span></td>`;
+// value a single customer type pays
+const segVal=(r,sg)=>{const [,,i,sm,l]=r; if(sg==='i')return i; if(sg==='s')return sm??i; return l==='='?i:l==='=s'?(sm??i):l;};
+const isNA=v=>v===N||v==='לא קיים';
+let HL='';
+const hl=t=>{if(!HL)return t;const k=t.indexOf(HL);return k<0?t:t.slice(0,k)+'<mark>'+HL+'</mark>'+t.slice(k+HL.length)};
 function rowHtml(r){
-  if(r.length<=2) return `<tr class="sg"><th colspan="4">${r[0]}${r[1]?`<small>${r[1]}</small>`:''}</th></tr>`;
+  const cols=SEG==='all'?4:2;
+  if(r.length<=2) return `<tr class="sg"><th colspan="${cols}">${r[0]}${r[1]?`<small>${r[1]}</small>`:''}</th></tr>`;
   const [n,sub,i,sm,l,k]=r;
   const tr=k==='tier'?'<tr class="tier">':'<tr>';
-  const name=`<td class="name">${n}${sub?`<small>${sub}</small>`:''}</td>`;
+  const name=`<td class="name">${hl(n)}${sub?`<small>${sub}</small>`:''}</td>`;
+  if(SEG!=='all') return `${tr}${name}${cell(segVal(r,SEG),1,'one',SEGN[SEG])}</tr>`;
   if(l==='=') return `${tr}${name}${cell(i,3,'same','כל הלקוחות')}</tr>`;
   if(l==='=s') return `${tr}${name}${cell(i,1,'','יחיד')}${cell(sm,2,'same','עסק קטן וגדול')}</tr>`;
   const left=sm===null?cell(i,2,'same','יחיד ועסק קטן'):cell(i,1,'','יחיד')+cell(sm,1,'','עסק קטן');
@@ -894,23 +951,28 @@ document.addEventListener('keydown',e=>{if(e.key==='/'&&document.activeElement!=
 
 function render(){
   const term=normalizeSearch(q.value), d=diffOnly.checked; let out='', n=0;
+  HL=q.value.trim().replace(/[<>&]/g,''); const one=SEG!=='all', cols=one?2:4;
+  tbl.classList.toggle('one',one);
+  tbl.tHead.innerHTML=one?`<tr><th>עמלה</th><th>${SEGN[SEG]}</th></tr>`:'<tr><th>עמלה</th><th>יחיד</th><th>עסק קטן</th><th>עסק גדול</th></tr>';
   for(const g of G){
     if(!term && !on.has(g.k)) continue;
     let body='', pendingSub='';
     for(const r of g.r){
       if(r.length<=2){ pendingSub=rowHtml(r); continue; }
-      if(d && !isDiff(r)) continue;
+      if(SEG==='all' && d && !isDiff(r)) continue;
+      if(SEG!=='all' && isNA(segVal(r,SEG))) continue;
       if(term && !text(r).includes(term) && !normalizeSearch(g.n).includes(term)) continue;
       body+=pendingSub+rowHtml(r); pendingSub=''; n++;
     }
-    if(body) out+=`<tr class="grp"><th colspan="4">${g.n}</th></tr>`+body;
+    if(body) out+=`<tr class="grp"><th colspan="${cols}">${g.n}</th></tr>`+body;
   }
   tb.innerHTML=out;
   document.getElementById('empty').hidden=n>0;
-  document.getElementById('count').textContent=term?`${n} תוצאות בכל הנושאים`:`${n} עמלות`;
+  document.getElementById('count').textContent=(term?`${n} תוצאות בכל הנושאים`:`${n} עמלות`)+(one?` ל${SEGN[SEG]}`:'');
   cats.classList.toggle('dim',!!term);
 }
 render();
+document.addEventListener('segchange',render);
 
 </script>
 <script>
@@ -979,7 +1041,8 @@ function block({title,amount,freq,per='',lines=[],note=''}){
     ${lines.length?`<ul class="steps">${lines.map(l=>`<li${l.th?' class="th"':''}><b>${l.k}</b><span>${l.v}</span></li>`).join('')}</ul>`:''}
     ${note?`<div class="alt">${note}</div>`:''}</div>`;
 }
-const card=(h,inner)=>`<article class="card"><h2>${h}</h2>${inner}</article>`;
+const card=(h,inner,sg='')=>`<article class="card"${sg?` data-seg="${sg}"`:''}><h2>${h}</h2>${inner}</article>`;
+const SEGOF={r:'i s',l:'l'};
 function feeLines(t,a,x,d,C){
   const L=[];
   if(t.label) L.push({k:'מדרגה',v:t.label});
@@ -1116,7 +1179,7 @@ function convList(sg,type,c,day){
       if(!n.freeBy) lines.push({k:'סה"כ מתוך הסכום',v:pct(total,a)});
       const al=tiers(alt.k,sg,c), ax=fee(pick(al,a),a,d,M);
       const note=`<div class="cmp">לבדיקת הסיווג: אילו סווג כ"<b>${alt.n}</b>" – עמלה ${USD(ax.final)} במקום ${USD(x.final)}.</div>`;
-      return card(h,block({amount:USD(total),freq:['once','פעם אחת, בביצוע'],lines})+note);
+      return card(h,block({amount:USD(total),freq:['once','פעם אחת, בביצוע'],lines})+note,SEGOF[sg]);
     }).join('');
     document.getElementById('fxThrN').textContent=`לפי "${n.n}"${out?`, ${c==='d'?'ערוץ ישיר':'פקיד'}`:''}, בתעריף מלא. מתחת לסכום המדרגה – עמלה קבועה.`;
     document.getElementById('fxThr').innerHTML=thrRows(SEGS.map(([sg,h])=>[h,tiers(n.k,sg,c)]),USD);
@@ -1141,7 +1204,7 @@ function convList(sg,type,c,day){
       const L=lst(sg), t=withLbl(L,pick(L,a),USD,sg==='l'&&D==='no'?'יום ללא מסחר · כל הערוצים':''), x=fee(t,a,d,M);
       const lines=[{k:T2==='ss'?'חליפין שקל ↔ מט"ח':'חליפין מט"ח ↔ מט"ח',v:''},...feeLines(t,a,x,d,USD),{k:'שיעור אפקטיבי',v:pct(x.final,a)}];
       const note=sg==='r'&&D==='no'?'בתעריפון יחידים ועסקים קטנים אין תעריף נפרד ליום ללא מסחר; מוצג התעריף הרגיל.':'';
-      return card(h,block({amount:USD(x.final),freq:['once','פעם אחת, בכל המרה'],lines,note}));
+      return card(h,block({amount:USD(x.final),freq:['once','פעם אחת, בכל המרה'],lines,note}),SEGOF[sg]);
     }).join('');
     document.getElementById('cvThr').innerHTML=thrRows(SEGS.map(([sg,h])=>[h,lst(sg)]),USD);
     discHd('tab-conv',d);
@@ -1164,8 +1227,8 @@ function convList(sg,type,c,day){
   function draw(){
     if(!amt||!disc) return;
     const a=amt.get(), d=disc.get()/100, M=m.get();
-    document.getElementById('lnCards').innerHTML=[['יחיד ועסק קטן',tR(a,digital.checked)],['עסק גדול',tL(a)]].map(([h,t])=>{
-      const x=fee(t,a,d,M); return card(h,block({amount:ILS(x.final),freq:['once','פעם אחת, בביצוע'],lines:feeLines(t,a,x,d,ILS)}));
+    document.getElementById('lnCards').innerHTML=[['יחיד ועסק קטן',tR(a,digital.checked),'i s'],['עסק גדול',tL(a),'l']].map(([h,t,sg])=>{
+      const x=fee(t,a,d,M); return card(h,block({amount:ILS(x.final),freq:['once','פעם אחת, בביצוע'],lines:feeLines(t,a,x,d,ILS)}),sg);
     }).join('');
     document.querySelectorAll('#tab-loan .hd-disc').forEach(h=>h.textContent=d>0?`אחרי ${+(d*100).toFixed(2)}%`:'אחרי הטבה');
     document.getElementById('lnRef').innerHTML=[100000,150000,200000,250000,300000,500000,750000,1000000,2000000,3000000].map(v=>{
@@ -1197,8 +1260,8 @@ function convList(sg,type,c,day){
       (()=>{const it=num(ri.value),f=12*(1-d),tot=Math.max(it,f);
         const L=[{k:'ריבית שנצברה ברבעון',v:ILS(it)},{k:'עמלת הקצאה'+(d>0?` אחרי הטבה ${+(d*100).toFixed(2)}%`:''),v:ILS(f)},{k:'נגבה הגבוה מביניהם',v:it>=f?'הריבית':'העמלה'}];
         return block({title:'הקצאת אשראי',amount:ILS(tot),per:'לרבעון',freq:['q','כל רבעון, בסוף הרבעון'],lines:L,
-          note:it===0?'ללא ניצול ברבעון (ריבית 0) – העמלה 12 ₪. בניצול חלקי הזינו את הריבית שנצברה.':'ריבית או עמלה, הגבוה מביניהם.'})})());
-    document.getElementById('liCards').innerHTML=ind+card('עסק קטן',handle('פטור אם אין שינוי בביטחונות')+alloc(.45))+card('עסק גדול',handle('פטור לא מצוין')+alloc(.565));
+          note:it===0?'ללא ניצול ברבעון (ריבית 0) – העמלה 12 ₪. בניצול חלקי הזינו את הריבית שנצברה.':'ריבית או עמלה, הגבוה מביניהם.'})})(),'i');
+    document.getElementById('liCards').innerHTML=ind+card('עסק קטן',handle('פטור אם אין שינוי בביטחונות')+alloc(.45),'s')+card('עסק גדול',handle('פטור לא מצוין')+alloc(.565),'l');
     document.querySelectorAll('#tab-lines .hd-disc').forEach(h=>h.textContent=d>0?`אחרי ${+(d*100).toFixed(2)}%`:'אחרי הטבה');
     document.getElementById('liRef').innerHTML=[50000,100000,150000,200000,250000,300000,500000,750000,1000000,1500000].map(v=>{
       const h=fee(H,v,d,M), s=v*.0045, l=v*.00565, c=h.bind==='min'?'minb':h.bind==='max'?'maxb':'';
