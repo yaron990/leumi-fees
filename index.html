@@ -303,6 +303,13 @@ html[data-seg="i"] .card[data-seg~="i"] h2::after,html[data-seg="s"] .card[data-
   .rbar .rb-go{flex:0 0 auto;align-self:center;margin-inline-start:auto;font-size:.78rem;opacity:.85}
   body.has-rbar .wrap{padding-bottom:84px}
 }
+
+.pop{display:inline-block;font-size:.68rem;font-weight:700;color:var(--paper);background:var(--sup);border-radius:999px;padding:0 7px;margin-inline-start:6px;vertical-align:2px}
+.ch.hi>span{font-weight:700}
+.ch.hi>i{color:var(--sup)}
+.ch.lo{opacity:.6;font-size:.88em}
+td.v.diff .ch.hi>i{color:var(--sup);opacity:1}
+.alt-ch{font-size:.85rem;color:var(--muted)}
 </style>
 
 <div class="wrap" dir="rtl" lang="he">
@@ -666,6 +673,9 @@ document.documentElement.dataset.seg=SEG;
 // small null = same as individual; large "=" same for all, "=s" same as small; kind "tier" = indented; a row of [title, sub] alone = sub-heading
 const P='<b class="p">פ</b>', C='<b class="c">*</b>', N='לא בתעריפון';
 const s=x=>`<small>${x}</small>`;
+// direct-channel-first (import/export are done online in practice)
+const chD=(t,d,n)=>`<span class="ch hi"><i>ישיר</i><span>${d}</span></span><span class="ch lo"><i>פקיד</i><span>${t}</span></span>`+(n?s(n):'');
+const POP='<span class="pop">נפוץ</span>';
 const ch=(t,d,n)=>`<span class="ch"><i>פקיד</i><span>${t}</span></span><span class="ch"><i>ישיר</i><span>${d}</span></span>`+(n?s(n):'');
 const usd=n=>'$'+(+n.toFixed(2)).toLocaleString('en-US',{maximumFractionDigits:2});
 const mm=(r,mn,mx,lo)=>{const p=[];if(mn!=null)p.push(`נפל במינימום ${lo?`מ-${usd(lo)} `:''}עד ${usd(mn/(r/100))}`);if(mx!=null)p.push(`במקסימום מ-${usd(mx/(r/100))}`);return `<small class="mm">${p.join(' · ')}</small>`};
@@ -780,14 +790,14 @@ const G=[
   ['חליפין ביום ללא מסחר במט"ח','בד"כ יום א\', לפי "שער יציג ידוע"',N,null,"2%, מינ' $7.20"+s("מט\"ח-מט\"ח 4%, מינ' $14.40")],
   ['פטורים מחליפין','',"המרה מפמ\"ח פיצויים · פנסיה מחבר העמים ורנטות",null,N],
   ['תשלום לחו"ל – איזו עמלה חלה','בחרו לפי מטרת התשלום'],
-  ['יבוא טובין – תשלום ישיר לספק','חשבון פתוח / טרנזיט · חלק 7 בתעריפון',ch("0.5% · מינ' $30"+mm(.5,30),"0.45% · מינ' $27"+mm(.45,27)),null,ch("0.5% · מינ' $30"+mm(.5,30),cd("0.45% · מינ' $27",10)+mm(.45,27))],
+  ['יבוא טובין – תשלום ישיר לספק'+POP,'חשבון פתוח / טרנזיט · חלק 7 בתעריפון · בפועל בערוץ ישיר',chD("0.5% · מינ' $30"+mm(.5,30),"0.45% · מינ' $27"+mm(.45,27)),null,chD("0.5% · מינ' $30"+mm(.5,30),cd("0.45% · מינ' $27",10)+mm(.45,27))],
   ['יבוא שירותים / תשלום לסוכן','עמלת העברה רגילה לחו"ל',"כמו העברה לחו\"ל",null,"="],
   ['העברה לחו"ל','',ch("0.225% · $22.50–$150"+mm(.225,22.5,150,600),"0.2025% · $20.25–$135"+mm(.2025,20.25,135,600)),null,ch("0.225% · $22.50–$200"+mm(.225,22.5,200,200),cd("0.2025% · $20.25–$180",10)+mm(.2025,20.25,180,200))],
   ['העברה קטנה לחו"ל','יחיד/קטן עד $600 · גדול עד $200',ch("$10","$9"),null,ch("$10",cd("$9",10))],
   ['תוספת SWIFT להעברה יוצאת','',"לא נגבית",null,"$12 להודעה"+s("נוסף על העמלה ועל הקורספונדנט")],
   ['הוצאות OUR (המוטב לא משלם)','',"לפי חיוב הבנק בחו\"ל",null,"="],
   ['קבלה מחו"ל – איזו עמלה חלה','בחרו לפי מקור הכסף'],
-  ['תמורת יצוא טובין או שירותים','יצוא ישיר · חלק 7 בתעריפון',tw("עד $200","$8","מעל $200","0.15% · מינ' $20 · מקס' $200"+mm(.15,20,200,200)),null,"="],
+  ['תמורת יצוא טובין או שירותים'+POP,'יצוא ישיר · חלק 7 בתעריפון · אותו תעריף בכל הערוצים',tw("עד $200","$8","מעל $200","0.15% · מינ' $20 · מקס' $200"+mm(.15,20,200,200)),null,"="],
   ['קבלת העברה אחרת מחו"ל','',tw("עד $600","$10","מעל $600","0.225% · מינ' $22.50 · מקס' $150"+mm(.225,22.5,150,600)),null,tw("עד $200","$10","מעל $200","0.225% · מינ' $22.50 · מקס' $200"+mm(.225,22.5,200,200))],
   ['העברה נכנסת פטורה','',"עם הערת OUR / PAY IN FULL · מגביית שיק או בנקנוט"+s("רנטות לנפגעי הנאצים · פנסיה מחבר העמים"),null,"עם הערת OUR / PAY IN FULL · מגביית שיק או בנקנוט"+s("תושב חוץ שמעביר מחשבונו להשקעה בבנק")],
   ['הערת BEN ביצוא','',"היצואן משלם את הוצאות הבנק בחו\"ל",null,"="],
@@ -852,7 +862,7 @@ const G=[
   ['אישור זמני / הסבת שטר מטען','לפני קבלת המסמכים',ch("0.2% · מינ' $50","0.18% · מינ' $45","בעסק גדול הישיר מחושב מהנחה 10%"),null,"="],
   ['תיקון בתנאי דוקומנטים לגבייה','',"$30",null,"="],
   ['אחסנה במחסני ערובה','',"0.25%"+s("מינ' $60"),null,"="],
-  ['יבוא ישיר','חשבון פתוח / טרנזיט',ch("0.5% · מינ' $30"+mm(.5,30),"0.45% · מינ' $27"+mm(.45,27),"בעסק גדול הישיר מחושב מהנחה 10%"),null,"="],
+  ['יבוא ישיר'+POP,'חשבון פתוח / טרנזיט · בפועל בערוץ ישיר',chD("0.5% · מינ' $30"+mm(.5,30),"0.45% · מינ' $27"+mm(.45,27),"בעסק גדול הישיר מחושב מהנחה 10%"),null,"="],
   ['הכנת מסמכים לעסקה מורכבת','',"0.1%"+s("מינ' $100 · מקס' $5,000 · חצי מוחזר אם בוצעה בלאומי, ובלבד שהחיוב אחרי ההחזר לא יפחת מהמינימום"),null,"="],
   ['יצוא'],
   ['משלוח דוקומנטים לגבייה','',"0.25%"+s("מינ' $50"),null,"="],
@@ -860,7 +870,7 @@ const G=[
   ['גבייה מעל חודש מעבר לפירעון','לחודש או חלקו',"0.035%"+s("מינ' $30"),null,"="],
   ['דמי טיפול בעסקת ניכיון','',"0.15%"+s("מינ' $100 · מקס' $500"),null,"="],
   ['תיקון בעסקת דוקומנטים לגבייה','',"$30",null,"="],
-  ['יצוא ישיר – זיכוי תמורות','',tw("עד $200","$8","מעל $200","0.15% · מינ' $20 · מקס' $200"+mm(.15,20,200,200)),null,"="],
+  ['יצוא ישיר – זיכוי תמורות'+POP,'אותו תעריף בכל הערוצים',tw("עד $200","$8","מעל $200","0.15% · מינ' $20 · מקס' $200"+mm(.15,20,200,200)),null,"="],
   ['קניית שיק בעסקת יצוא','',"0.5% + $3.20 לשיק",null,"="],
   ['ערבויות במט"ח'],
   ['הוצאת ערבות במט"ח','מקדמה, מכרז, ביצוע, אשראי ספקים',"5% לשנה"+s("מינ' $115"),null,"="],
@@ -1159,6 +1169,10 @@ function convList(sg,type,c,day){
   const OUT_EXTRA=['עסק גדול: הודעת SWIFT $12 לכל העברה יוצאת (נכלל בחישוב)','הוצאות קורספונדנט; בהוראת OUR (המוטב לא משלם) – גם הוצאות הבנק בחו"ל לפי חיובו','עסק גדול: 1.65 ₪ רישום פעולה','בהעברה משקלים – גם עמלת חליפין (סמנו "כולל המרה")'];
   const IN_EXTRA=['עסק גדול: 1.65 ₪ רישום פעולה','בהמרה לשקלים – גם עמלת חליפין (סמנו "כולל המרה")'];
   const NAT=[
+   {k:'imp',dir:'out',pop:1,direct:1,n:'יבוא טובין – תשלום ישיר לספק',s:'סחורה · חשבון פתוח / טרנזיט',item:'יבוא ישיר',cmp:'svc',
+    what:'תשלום ישיר לספק בחו"ל על טובין, בחשבון פתוח או בעסקת טרנזיט, שלא באמצעות דוקומנטים לגבייה או אשראי דוקומנטרי. מחויב לפי "יבוא ישיר" (סחר חוץ, חלק 7) – אחוז עם מינימום וללא מקסימום, ולכן בסכומים גדולים יקר בהרבה מהעברה רגילה.',
+    ex:['תשלום לספק על משלוח סחורה','עסקת טרנזיט – סחורה שנקנית בחו"ל'],
+    no:['שירותים, תוכנה או עמלת סוכן – בחרו "יבוא שירותים"','תשלום דרך דוקומנטים לגבייה או אשראי דוקומנטרי – עמלות נפרדות בלשונית "כל העמלות" (סחר חוץ / אשראי דוקומנטרי)'],extra:OUT_EXTRA},
    {k:'gen',dir:'out',n:'העברה פרטית / כללית',s:'לחשבון שלי או של אחר, משפחה, השקעה',item:'העברה לחו"ל',cmp:'imp',
     what:'כל העברה יוצאת שאינה תשלום לספק על טובין (סחורה). מחויבת בעמלת "העברה לחו"ל": סכום קטן – עמלה קבועה, מעליו אחוז עם מינימום ומקסימום.',
     ex:['העברה לחשבון שלי או של בן משפחה בחו"ל','מתנה, תמיכה, שכר לימוד, שכירות','העברה להשקעה או לרכישת נכס בחו"ל'],
@@ -1167,11 +1181,7 @@ function convList(sg,type,c,day){
     what:'תשלום עבור שירות שניתן מחו"ל, או עמלה לסוכן. לפי התעריפון מחויב כהעברה רגילה לחו"ל ולא כ"יבוא ישיר" – כלומר עם מקסימום לעמלה.',
     ex:['ייעוץ, פיתוח, עיצוב, פרסום','מנויי תוכנה ושירותי ענן','עמלת סוכן או מתווך בחו"ל'],
     no:['תשלום על הסחורה עצמה – בחרו "יבוא טובין"'],extra:OUT_EXTRA},
-   {k:'imp',dir:'out',n:'יבוא טובין – תשלום ישיר לספק',s:'סחורה · חשבון פתוח / טרנזיט',item:'יבוא ישיר',cmp:'svc',
-    what:'תשלום ישיר לספק בחו"ל על טובין, בחשבון פתוח או בעסקת טרנזיט, שלא באמצעות דוקומנטים לגבייה או אשראי דוקומנטרי. מחויב לפי "יבוא ישיר" (סחר חוץ, חלק 7) – אחוז עם מינימום וללא מקסימום, ולכן בסכומים גדולים יקר בהרבה מהעברה רגילה.',
-    ex:['תשלום לספק על משלוח סחורה','עסקת טרנזיט – סחורה שנקנית בחו"ל'],
-    no:['שירותים, תוכנה או עמלת סוכן – בחרו "יבוא שירותים"','תשלום דרך דוקומנטים לגבייה או אשראי דוקומנטרי – עמלות נפרדות בלשונית "כל העמלות" (סחר חוץ / אשראי דוקומנטרי)'],extra:OUT_EXTRA},
-   {k:'exp',dir:'in',n:'תמורת יצוא טובין או שירותים',s:'תשלום מלקוח בחו"ל על מכירה',item:'יצוא ישיר – זיכוי תמורות',cmp:'ing',
+   {k:'exp',dir:'in',pop:1,n:'תמורת יצוא טובין או שירותים',s:'תשלום מלקוח בחו"ל על מכירה',item:'יצוא ישיר – זיכוי תמורות',cmp:'ing',
     what:'זיכוי תמורה מלקוח בחו"ל על טובין או שירותים שמכרתם. מחויב לפי "יצוא ישיר – זיכוי תמורות" (סחר חוץ, חלק 7). התעריף זהה ליחיד, לעסק קטן ולעסק גדול.',
     ex:['תשלום מלקוח בחו"ל על סחורה שנשלחה','תשלום על שירות שסופק ללקוח בחו"ל (פיתוח, ייעוץ, עיצוב)'],
     no:['משכורת כשכיר, מתנה, החזר או העברה מחשבון שלי – בחרו "קבלה אחרת"','גבייה בדוקומנטים או באשראי דוקומנטרי – עמלות נפרדות'],
@@ -1186,14 +1196,14 @@ function convList(sg,type,c,day){
     no:['אין הערת OUR / PAY IN FULL בהוראה – העמלה לפי "קבלה אחרת" או "תמורת יצוא"'],extra:IN_EXTRA},
   ];
   const byK=k=>NAT.find(n=>n.k===k);
-  let dir='out'; const natSel={out:'gen',in:'exp'};
-  try{const v=JSON.parse(localStorage.getItem('fxSel')||'null'); if(v&&(v.dir==='out'||v.dir==='in')){dir=v.dir; if(byK(v.out))natSel.out=v.out; if(byK(v.in))natSel.in=v.in;}}catch(e){}
+  let dir='out'; const natSel={out:'imp',in:'exp'};
+  try{const v=JSON.parse(localStorage.getItem('fxSel2')||'null'); if(v&&(v.dir==='out'||v.dir==='in')){dir=v.dir; if(byK(v.out))natSel.out=v.out; if(byK(v.in))natSel.in=v.in;}}catch(e){}
   const dirEl=document.getElementById('fxDir'), natEl=document.getElementById('fxNat'), info=document.getElementById('fxInfo');
-  const save=()=>{try{localStorage.setItem('fxSel',JSON.stringify({dir,...natSel}))}catch(e){}};
+  const save=()=>{try{localStorage.setItem('fxSel2',JSON.stringify({dir,...natSel}))}catch(e){}};
   function markDir(){dirEl.querySelectorAll('[data-v]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.v===dir))}
   function renderNat(){
     natEl.dataset.dir=dir;
-    natEl.innerHTML=NAT.filter(n=>n.dir===dir).map(n=>`<button class="chip" type="button" data-v="${n.k}" aria-pressed="${natSel[dir]===n.k}"><span>${n.n}</span><small>${n.s}</small></button>`).join('');
+    natEl.innerHTML=NAT.filter(n=>n.dir===dir).map(n=>`<button class="chip" type="button" data-v="${n.k}" aria-pressed="${natSel[dir]===n.k}"><span>${n.n}${n.pop?POP:''}</span><small>${n.s}</small></button>`).join('');
   }
   dirEl.addEventListener('click',e=>{const b=e.target.closest('[data-v]');if(!b)return;dir=b.dataset.v;markDir();renderNat();save();draw()});
   natEl.addEventListener('click',e=>{const b=e.target.closest('[data-v]');if(!b)return;natSel[dir]=b.dataset.v;renderNat();save();draw()});
@@ -1206,7 +1216,7 @@ function convList(sg,type,c,day){
   const li=a=>a.map(x=>`<li>${x}</li>`).join('');
   function infoHtml(n,c){
     const out=n.dir==='out';
-    const cols=out?[['t','פקיד'],['d','ערוץ ישיר']]:[['t','כל הערוצים']];
+    const cols=!out?[['t','כל הערוצים']]:n.direct?[['d','ערוץ ישיר'],['t','פקיד (לא נפוץ)']]:[['t','פקיד'],['d','ערוץ ישיר']];
     const rows=SEGS.map(([sg,h])=>`<tr><th scope="row">${h}</th>${n.freeBy?`<td colspan="${cols.length}">פטור כאשר: ${n.freeBy[sg].join(' · ')}</td>`:
       cols.map(([cc])=>{const L=tiers(n.k,sg,cc);return `<td${out&&cc===c?' style="font-weight:500"':''}>${L.map(t=>(L.length>1?`<span class="tl">${tierLbl(t,USD)}:</span> `:'')+desc(t,USD)).join('<br>')}</td>`}).join('')}</tr>`).join('');
     return `<h3><span class="dpill">${out?'↑ הוצאה לחו"ל':'↓ קבלה מחו"ל'}</span>${n.n}</h3>
@@ -1222,9 +1232,9 @@ function convList(sg,type,c,day){
   function draw(){
     if(!amt||!disc) return;
     const a=amt.get(), d=disc.get()/100, M=m.get(), n=byK(natSel[dir]), out=dir==='out';
-    document.getElementById('fxChF').hidden=!out;
+    document.getElementById('fxChF').hidden=!out||!!n.direct;
     document.getElementById('fxConvL').textContent=out?'כולל המרה משקלים':'כולל המרה לשקלים';
-    const c=out?ch.get():'t';
+    const c=!out?'t':n.direct?'d':ch.get();
     info.className='info '+dir; info.innerHTML=infoHtml(n,c);
     const alt=byK(n.cmp);
     document.getElementById('fxCards').innerHTML=SEGS.map(([sg,h])=>{
@@ -1235,9 +1245,11 @@ function convList(sg,type,c,day){
       if(cv.checked){const ct=pick(convList(sg,'ss',out?c:'d','reg'),a),cx=fee(ct,a);total+=cx.final;
         lines.push({k:`המרה <bdi dir="ltr">${ct.rate}%</bdi> (תעריף מלא${out?'':', ישיר'})${cx.bind?' '+tag(cx.bind):''}`,v:USD(cx.final)})}
       if(!n.freeBy) lines.push({k:'סה"כ מתוך הסכום',v:pct(total,a)});
+      let tellerNote='';
+      if(n.direct){const tl=tiers(n.k,sg,'t'),tx=fee(pick(tl,a),a,d,M); tellerNote=`<div class="alt-ch">לפי ערוץ ישיר (אינטרנט / On Trade), כך מבוצע בפועל. בפקיד: ${USD(tx.final)}.</div>`;}
       const al=tiers(alt.k,sg,c), ax=fee(pick(al,a),a,d,M);
       const note=`<div class="cmp">לבדיקת הסיווג: אילו סווג כ"<b>${alt.n}</b>" – עמלה ${USD(ax.final)} במקום ${USD(x.final)}.</div>`;
-      return card(h,block({amount:USD(total),freq:['once','פעם אחת, בביצוע'],lines})+note,SEGOF[sg]);
+      return card(h,block({amount:USD(total),freq:['once','פעם אחת, בביצוע'],lines})+tellerNote+note,SEGOF[sg]);
     }).join('');
     document.getElementById('fxThrN').textContent=`לפי "${n.n}"${out?`, ${c==='d'?'ערוץ ישיר':'פקיד'}`:''}, בתעריף מלא. מתחת לסכום המדרגה – עמלה קבועה.`;
     document.getElementById('fxThr').innerHTML=thrRows(SEGS.map(([sg,h])=>[h,tiers(n.k,sg,c)]),USD);
